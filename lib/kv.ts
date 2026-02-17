@@ -5,6 +5,7 @@ export interface Transaction {
   timestamp: number
   blockNumber: number
   gasUsed: string
+  gasCostWei?: string
   tokenIds: string[]
 }
 

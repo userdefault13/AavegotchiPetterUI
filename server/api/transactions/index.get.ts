@@ -1,7 +1,7 @@
 import { getTransactions, getManualTriggerLogs, checkAuth } from '~/lib'
 
 export type ExecutionEntry =
-  | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; tokenIds: string[] }
+  | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; gasCostWei?: string; tokenIds: string[] }
   | { type: 'manual'; id: string; timestamp: number; message: string; petted?: number }
 
 export default defineEventHandler(async (event): Promise<ExecutionEntry[]> => {
@@ -27,6 +27,7 @@ export default defineEventHandler(async (event): Promise<ExecutionEntry[]> => {
       timestamp: t.timestamp,
       blockNumber: t.blockNumber,
       gasUsed: t.gasUsed,
+      gasCostWei: t.gasCostWei,
       tokenIds: t.tokenIds,
     })),
     ...manualLogs.map((m) => ({

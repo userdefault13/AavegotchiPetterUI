@@ -16,6 +16,12 @@ export default defineEventHandler(async () => {
       (e) => Date.now() - e.timestamp < 24 * 60 * 60 * 1000
     ).length
 
+    const totalGasCostWei = transactions.reduce((sum, tx) => {
+      const wei = tx.gasCostWei ? BigInt(tx.gasCostWei) : 0n
+      return sum + wei
+    }, 0n)
+    const totalGasCostEth = Number(totalGasCostWei) / 1e18
+
     return {
       status: 'ok',
       timestamp: new Date().toISOString(),
@@ -31,6 +37,7 @@ export default defineEventHandler(async () => {
         totalAavegotchisPetted: totalPetted,
         transactionsLast24h: last24h,
         errorsLast24h,
+        totalGasCostEth,
         successRate:
           transactions.length + errors.length > 0
             ? Math.round(

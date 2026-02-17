@@ -24,6 +24,7 @@ export default defineEventHandler(async (event) => {
     transactionHash?: string
     blockNumber?: number
     gasUsed?: string
+    gasCostWei?: string
     petted?: number
     tokenIds?: string[]
     message?: string
@@ -46,6 +47,7 @@ export default defineEventHandler(async (event) => {
       timestamp: Date.now(),
       blockNumber: body.blockNumber,
       gasUsed: body.gasUsed || '0',
+      gasCostWei: body.gasCostWei,
       tokenIds: body.tokenIds || [],
     })
     await setBotState({

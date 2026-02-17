@@ -27,7 +27,7 @@
       </div>
 
       <!-- Stats Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
           <p class="text-slate-400 text-sm">Next Pet</p>
           <p class="text-xl font-bold mt-1 font-mono">{{ nextPetTimer }}</p>
@@ -43,6 +43,10 @@
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
           <p class="text-slate-400 text-sm">Last 24h</p>
           <p class="text-xl font-bold mt-1">{{ stats.transactionsLast24h ?? 0 }}</p>
+        </div>
+        <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
+          <p class="text-slate-400 text-sm">Gas Cost</p>
+          <p class="text-xl font-bold mt-1 font-mono">{{ formatGasCost(stats.totalGasCostEth) }}</p>
         </div>
       </div>
 
@@ -125,7 +129,10 @@
                 >
                   {{ entry.hash.slice(0, 10) }}...{{ entry.hash.slice(-8) }}
                 </a>
-                <p class="text-slate-400 text-xs mt-1">{{ formatDate(entry.timestamp) }} • {{ entry.tokenIds.length }} petted</p>
+                <p class="text-slate-400 text-xs mt-1">
+                  {{ formatDate(entry.timestamp) }} • {{ entry.tokenIds.length }} petted
+                  <span v-if="entry.gasCostWei" class="text-slate-500"> • {{ formatGasCost(Number(BigInt(entry.gasCostWei)) / 1e18) }}</span>
+                </p>
               </template>
               <template v-else>
                 <p class="text-slate-200 text-sm font-medium truncate">{{ entry.message }}</p>
@@ -211,12 +218,13 @@ interface HealthData {
     totalTransactions: number
     totalAavegotchisPetted: number
     transactionsLast24h: number
+    totalGasCostEth?: number
     successRate: number
   }
 }
 
 type ExecutionEntry =
-  | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; tokenIds: string[] }
+  | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; gasCostWei?: string; tokenIds: string[] }
   | { type: 'manual'; id: string; timestamp: number; message: string; petted?: number }
 
 interface DelegationStatus {
@@ -365,6 +373,12 @@ const formatDate = (val: string | number | undefined) => {
 const formatLogTime = (ts: number) => {
   const d = new Date(ts)
   return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
+
+const formatGasCost = (eth: number | undefined) => {
+  if (eth == null || eth === 0) return '—'
+  if (eth < 0.0001) return '<0.0001 ETH'
+  return `${eth.toFixed(4)} ETH`
 }
 
 onMounted(async () => {
