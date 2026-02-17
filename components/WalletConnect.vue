@@ -57,6 +57,10 @@ import { wagmiConfig, metaMaskConnector, coinbaseConnector } from '~/lib/wagmi'
 
 const config = useRuntimeConfig()
 const allowedAddress = (config.public?.allowedAddress || '0x2127aa7265d573aa467f1d73554d17890b872e76').toLowerCase()
+const allowedAddressesRaw = config.public?.allowedAddresses as string | undefined
+const allowedList = allowedAddressesRaw
+  ? allowedAddressesRaw.split(',').map((a) => a.trim().toLowerCase()).filter(Boolean)
+  : [allowedAddress]
 
 const address = ref<string>('')
 const isConnected = ref(false)
@@ -86,8 +90,11 @@ const connectWallet = async (target: 'metaMask' | 'coinbaseWallet') => {
       address.value = result.accounts[0]
       isConnected.value = true
 
-      if (result.accounts[0].toLowerCase() !== allowedAddress) {
-        error.value = `Your address is not whitelisted. Only ${allowedAddress} is allowed.`
+      const addr = result.accounts[0].toLowerCase()
+      if (!allowedList.includes(addr)) {
+        error.value = allowedList.length === 1
+          ? `Your address is not whitelisted. Only ${allowedAddress} is allowed.`
+          : 'Your address is not whitelisted.'
         isConnected.value = false
       } else {
         await checkAuth()
