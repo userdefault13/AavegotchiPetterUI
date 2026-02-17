@@ -10,6 +10,7 @@ export const wagmiConfig = createConfig({
   transports: {
     [base.id]: http(),
   },
+  ssr: true,
 })
 
 export const AAVEGOTCHI_DIAMOND_ADDRESS = '0xA99c4B08201F2913Db8D28e71d020c4298F29dBF' as const

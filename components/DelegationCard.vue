@@ -74,6 +74,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getWalletClient, writeContract } from '@wagmi/core'
+import { base } from '@wagmi/core/chains'
 import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI } from '~/lib/wagmi'
 
 interface DelegationStatus {
@@ -120,6 +121,7 @@ const approveDelegation = async () => {
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
       args: [petterAddress.value as `0x${string}`, true],
+      chainId: base.id,
     })
     await fetchStatus()
   } catch (err: any) {
@@ -157,6 +159,7 @@ const revokeDelegation = async () => {
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
       args: [petterAddress.value as `0x${string}`, false],
+      chainId: base.id,
     })
     await $fetch('/api/delegation/unregister', { method: 'POST' })
     await fetchStatus()
