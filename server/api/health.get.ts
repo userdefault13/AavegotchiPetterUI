@@ -24,6 +24,7 @@ export default defineEventHandler(async () => {
         running: state?.running ?? false,
         lastRun: state?.lastRun ? new Date(state.lastRun).toISOString() : null,
         lastError: state?.lastError ?? null,
+        lastRunMessage: state?.lastRunMessage ?? null,
       },
       stats: {
         totalTransactions: transactions.length,

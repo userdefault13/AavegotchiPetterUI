@@ -1,4 +1,4 @@
-import { addTransaction, addError, getBotState, setBotState } from '~/lib/kv'
+import { addTransaction, addError, addWorkerLogs, getBotState, setBotState } from '~/lib/kv'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
     tokenIds?: string[]
     message?: string
     error?: string
+    logs?: { timestamp: number; level: string; message: string }[]
   } | undefined
 
   if (!body || typeof body !== 'object') {
@@ -52,6 +53,7 @@ export default defineEventHandler(async (event) => {
       running: true,
       lastRun: Date.now(),
       lastError: undefined,
+      lastRunMessage: body.message,
     })
   } else if (!body.success && body.error) {
     await addError({
@@ -63,13 +65,27 @@ export default defineEventHandler(async (event) => {
     await setBotState({
       ...state!,
       lastError: body.error,
+      lastRunMessage: undefined,
     })
   } else {
     await setBotState({
       ...state!,
       lastRun: Date.now(),
       lastError: undefined,
+      lastRunMessage: body.message,
     })
+  }
+
+  if (body.logs?.length) {
+    const valid = body.logs.filter(
+      (l) =>
+        typeof l.timestamp === 'number' &&
+        ['info', 'warn', 'error'].includes(l.level) &&
+        typeof l.message === 'string'
+    )
+    if (valid.length) {
+      await addWorkerLogs(valid as { timestamp: number; level: 'info' | 'warn' | 'error'; message: string }[])
+    }
   }
 
   return { ok: true }

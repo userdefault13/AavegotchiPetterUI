@@ -16,10 +16,34 @@ export interface ErrorLog {
   type: string
 }
 
+export interface WorkerLogEntry {
+  timestamp: number
+  level: 'info' | 'warn' | 'error'
+  message: string
+}
+
+export async function addWorkerLogs(entries: WorkerLogEntry[]): Promise<void> {
+  if (!entries.length) return
+  for (const e of entries) {
+    await kv.lpush('worker_logs', e)
+  }
+  await kv.ltrim('worker_logs', 0, 199)
+}
+
+export async function getWorkerLogs(limit = 100): Promise<WorkerLogEntry[]> {
+  try {
+    const logs = await kv.lrange<WorkerLogEntry>('worker_logs', 0, limit - 1)
+    return logs || []
+  } catch {
+    return []
+  }
+}
+
 export interface BotState {
   running: boolean
   lastRun?: number
   lastError?: string
+  lastRunMessage?: string
 }
 
 export async function getBotState(): Promise<BotState | null> {
@@ -54,6 +78,27 @@ export async function getTransaction(hash: string): Promise<Transaction | null> 
   return transactions.find((t) => t.hash === hash) || null
 }
 
+export interface ManualTriggerLog {
+  id: string
+  timestamp: number
+  message: string
+  petted?: number
+}
+
+export async function addManualTriggerLog(log: ManualTriggerLog): Promise<void> {
+  await kv.lpush('manual_triggers', log)
+  await kv.ltrim('manual_triggers', 0, 99)
+}
+
+export async function getManualTriggerLogs(limit = 50): Promise<ManualTriggerLog[]> {
+  try {
+    const logs = await kv.lrange<ManualTriggerLog>('manual_triggers', 0, limit - 1)
+    return logs || []
+  } catch {
+    return []
+  }
+}
+
 export async function addError(error: ErrorLog): Promise<void> {
   await kv.lpush('errors', error)
   await kv.ltrim('errors', 0, 99)
@@ -82,6 +127,7 @@ export async function getDelegatedOwners(): Promise<string[]> {
 }
 
 export async function addDelegatedOwner(owner: string): Promise<void> {
+  if (!owner || typeof owner !== 'string') return
   const normalized = owner.toLowerCase()
   const owners = await getDelegatedOwners()
   if (!owners.includes(normalized)) {
@@ -91,6 +137,7 @@ export async function addDelegatedOwner(owner: string): Promise<void> {
 }
 
 export async function isDelegatedOwner(owner: string): Promise<boolean> {
+  if (!owner || typeof owner !== 'string') return false
   const owners = await getDelegatedOwners()
   return owners.includes(owner.toLowerCase())
 }

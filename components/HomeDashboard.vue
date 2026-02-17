@@ -75,6 +75,10 @@
               <p class="text-slate-400 text-sm">Last Run</p>
               <p class="mt-1">{{ formatDate(status.lastRun) }}</p>
             </div>
+            <div v-if="status.lastRunMessage && !status.lastError">
+              <p class="text-slate-400 text-sm">Last Outcome</p>
+              <p class="text-slate-300 text-sm mt-1">{{ status.lastRunMessage }}</p>
+            </div>
             <div v-if="status.lastError">
               <p class="text-slate-400 text-sm">Last Error</p>
               <p class="text-red-400 text-sm mt-1 truncate">{{ status.lastError }}</p>
@@ -107,35 +111,86 @@
         </div>
         <div v-else class="space-y-3 max-h-64 overflow-y-auto">
           <div
-            v-for="tx in history"
-            :key="tx.hash"
+            v-for="entry in history"
+            :key="entry.type === 'transaction' ? entry.hash : entry.id"
             class="flex items-center justify-between p-3 bg-white/5 rounded-lg hover:bg-white/10 transition"
           >
             <div class="flex-1 min-w-0">
-              <a
-                :href="`https://basescan.org/tx/${tx.hash}`"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="font-mono text-sm text-blue-400 hover:text-blue-300 truncate block"
-              >
-                {{ tx.hash.slice(0, 10) }}...{{ tx.hash.slice(-8) }}
-              </a>
-              <p class="text-slate-400 text-xs mt-1">{{ formatDate(tx.timestamp) }} • {{ tx.tokenIds.length }} petted</p>
+              <template v-if="entry.type === 'transaction'">
+                <a
+                  :href="`https://basescan.org/tx/${entry.hash}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="font-mono text-sm text-blue-400 hover:text-blue-300 truncate block"
+                >
+                  {{ entry.hash.slice(0, 10) }}...{{ entry.hash.slice(-8) }}
+                </a>
+                <p class="text-slate-400 text-xs mt-1">{{ formatDate(entry.timestamp) }} • {{ entry.tokenIds.length }} petted</p>
+              </template>
+              <template v-else>
+                <p class="text-slate-200 text-sm font-medium truncate">{{ entry.message }}</p>
+                <p class="text-slate-400 text-xs mt-1">{{ formatDate(entry.timestamp) }}{{ entry.petted != null ? ` • ${entry.petted} petted` : '' }}</p>
+              </template>
             </div>
-            <span class="text-emerald-400 text-xs font-medium ml-2">Success</span>
+            <span
+              class="text-xs font-medium ml-2"
+              :class="entry.type === 'manual' ? 'text-amber-400' : 'text-emerald-400'"
+            >
+              {{ entry.type === 'manual' ? 'Manual' : 'Success' }}
+            </span>
           </div>
         </div>
       </div>
 
       <!-- Bot Control & Delegation -->
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6 mt-6">
-        <BotControl />
+        <BotControl @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
         <DelegationCard />
       </div>
 
       <!-- Delegating Owners -->
       <div v-if="isAuthenticated" class="mt-6">
         <DelegationList />
+      </div>
+
+      <!-- Worker Logs -->
+      <div v-if="isAuthenticated" class="mt-6">
+        <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Worker Logs</h2>
+            <button
+              @click="fetchWorkerLogs"
+              :disabled="workerLogsLoading"
+              class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition disabled:opacity-50"
+            >
+              {{ workerLogsLoading ? 'Loading...' : 'Refresh' }}
+            </button>
+          </div>
+          <div v-if="workerLogsLoading && workerLogs.length === 0" class="text-center py-8 text-slate-400">
+            <p>Loading worker logs...</p>
+          </div>
+          <div v-else-if="workerLogs.length === 0" class="text-center py-8 text-slate-400">
+            <p>No worker logs yet. Trigger a run to see logs.</p>
+          </div>
+          <div v-else class="space-y-1.5 max-h-80 overflow-y-auto font-mono text-xs">
+            <div
+              v-for="(log, i) in workerLogs"
+              :key="`${log.timestamp}-${i}`"
+              class="flex items-start gap-2 py-1.5 px-2 rounded hover:bg-white/5"
+              :class="{
+                'text-slate-300': log.level === 'info',
+                'text-amber-400': log.level === 'warn',
+                'text-red-400': log.level === 'error',
+              }"
+            >
+              <span class="text-slate-500 shrink-0">{{ formatLogTime(log.timestamp) }}</span>
+              <span class="shrink-0 w-10" :class="{ 'text-amber-400': log.level === 'warn', 'text-red-400': log.level === 'error' }">
+                [{{ log.level.toUpperCase() }}]
+              </span>
+              <span class="break-all">{{ log.message }}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -151,7 +206,7 @@ import { base } from 'viem/chains'
 
 interface HealthData {
   status: string
-  bot: { running: boolean; lastRun: string | null; lastError: string | null }
+  bot: { running: boolean; lastRun: string | null; lastError: string | null; lastRunMessage?: string | null }
   stats: {
     totalTransactions: number
     totalAavegotchisPetted: number
@@ -160,13 +215,9 @@ interface HealthData {
   }
 }
 
-interface Transaction {
-  hash: string
-  timestamp: number
-  blockNumber: number
-  gasUsed: string
-  tokenIds: string[]
-}
+type ExecutionEntry =
+  | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; tokenIds: string[] }
+  | { type: 'manual'; id: string; timestamp: number; message: string; petted?: number }
 
 interface DelegationStatus {
   approved: boolean
@@ -175,17 +226,20 @@ interface DelegationStatus {
 }
 
 const health = ref<HealthData | null>(null)
-const history = ref<Transaction[]>([])
+const history = ref<ExecutionEntry[]>([])
 const delegationStatus = ref<DelegationStatus | null>(null)
 const walletBalance = ref<string | null>(null)
+const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
 const loading = ref(true)
 const historyLoading = ref(false)
+const workerLogsLoading = ref(false)
 const isAuthenticated = ref(false)
 
 const status = computed(() => ({
   running: health.value?.bot?.running ?? false,
   lastRun: health.value?.bot?.lastRun ?? null,
   lastError: health.value?.bot?.lastError ?? null,
+  lastRunMessage: health.value?.bot?.lastRunMessage ?? null,
 }))
 
 const stats = computed(() => health.value?.stats ?? { successRate: 100 })
@@ -225,12 +279,28 @@ const fetchHistory = async () => {
   if (!isAuthenticated.value) return
   historyLoading.value = true
   try {
-    const data = await $fetch<Transaction[]>('/api/transactions', { query: { limit: 20 } })
+    const data = await $fetch<ExecutionEntry[]>('/api/transactions', { query: { limit: 20 } })
     history.value = data
   } catch (err) {
     console.error('Failed to fetch history:', err)
   } finally {
     historyLoading.value = false
+  }
+}
+
+const fetchWorkerLogs = async () => {
+  if (!isAuthenticated.value) return
+  workerLogsLoading.value = true
+  try {
+    const data = await $fetch<{ timestamp: number; level: string; message: string }[]>('/api/bot/logs', {
+      query: { limit: 100 },
+    })
+    workerLogs.value = data
+  } catch (err) {
+    console.error('Failed to fetch worker logs:', err)
+    workerLogs.value = []
+  } finally {
+    workerLogsLoading.value = false
   }
 }
 
@@ -292,17 +362,25 @@ const formatDate = (val: string | number | undefined) => {
   return new Date(ts).toLocaleString()
 }
 
+const formatLogTime = (ts: number) => {
+  const d = new Date(ts)
+  return d.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })
+}
+
 onMounted(async () => {
   await checkAuth()
   await fetchHealth()
   if (isAuthenticated.value) {
     await fetchMe()
-    await Promise.all([fetchHistory(), fetchDelegation(), fetchBalance()])
+    await Promise.all([fetchHistory(), fetchDelegation(), fetchBalance(), fetchWorkerLogs()])
   }
   loading.value = false
   setInterval(fetchHealth, 30000)
   if (isAuthenticated.value) {
-    setInterval(() => Promise.all([fetchMe(), fetchHistory(), fetchBalance()]), 60000)
+    setInterval(
+      () => Promise.all([fetchMe(), fetchHistory(), fetchBalance(), fetchWorkerLogs()]),
+      60000
+    )
   }
 })
 </script>

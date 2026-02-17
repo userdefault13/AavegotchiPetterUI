@@ -21,6 +21,10 @@
           </div>
         </div>
 
+        <div v-if="status.lastRunMessage && !status.lastError" class="bg-white/5 border border-white/10 rounded-lg p-4">
+          <p class="text-slate-400 text-sm font-medium">Last Outcome</p>
+          <p class="text-slate-300 text-sm mt-1">{{ status.lastRunMessage }}</p>
+        </div>
         <div v-if="status.lastError" class="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
           <p class="text-red-400 font-medium">Last Error</p>
           <p class="text-red-300 text-sm mt-1">{{ status.lastError }}</p>
@@ -56,10 +60,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 
+const emit = defineEmits<{ triggered: [] }>()
+
 interface BotState {
   running: boolean
   lastRun?: number
   lastError?: string
+  lastRunMessage?: string
 }
 
 const status = ref<BotState>({ running: false })
@@ -95,8 +102,13 @@ const toggleBot = async () => {
 const triggerBot = async () => {
   triggering.value = true
   try {
-    await $fetch('/api/bot/trigger', { method: 'POST' })
-    alert('Bot triggered successfully!')
+    const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
+      method: 'POST',
+      body: { force: true },
+    })
+    const msg = res?.result?.message
+    alert(msg || 'Bot triggered successfully!')
+    emit('triggered')
     await fetchStatus()
   } catch (err: any) {
     console.error('Failed to trigger bot:', err)
