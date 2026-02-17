@@ -53,12 +53,18 @@
           >
             {{ registering ? 'Registering...' : '2. Register for Auto-Petting' }}
           </button>
-          <div
-            v-else-if="status?.registered"
-            class="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm border border-emerald-500/50"
-          >
-            ✓ You're all set! Your Aavegotchis will be petted every 12 hours.
-          </div>
+          <template v-else-if="status?.registered">
+            <div class="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm border border-emerald-500/50">
+              ✓ You're all set! Your Aavegotchis will be petted every 12 hours.
+            </div>
+            <button
+              @click="revokeDelegation"
+              :disabled="revoking"
+              class="px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 text-sm font-medium"
+            >
+              {{ revoking ? 'Revoking...' : 'Revoke & Change Petter' }}
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -83,6 +89,7 @@ const petterAddress = ref('')
 const loading = ref(true)
 const approving = ref(false)
 const registering = ref(false)
+const revoking = ref(false)
 
 const fetchStatus = async () => {
   try {
@@ -132,6 +139,33 @@ const register = async () => {
     alert(err?.data?.message || err?.message || 'Registration failed')
   } finally {
     registering.value = false
+  }
+}
+
+const revokeDelegation = async () => {
+  if (!petterAddress.value) return
+  if (!confirm('Revoke the current petter? You will need to approve again after updating the petter address.')) return
+  revoking.value = true
+  try {
+    const walletClient = await getWalletClient(wagmiConfig)
+    if (!walletClient) {
+      alert('Please connect your wallet first')
+      return
+    }
+    await writeContract(wagmiConfig, {
+      address: AAVEGOTCHI_DIAMOND_ADDRESS,
+      abi: AAVEGOTCHI_FACET_ABI,
+      functionName: 'setPetOperatorForAll',
+      args: [petterAddress.value as `0x${string}`, false],
+    })
+    await $fetch('/api/delegation/unregister', { method: 'POST' })
+    await fetchStatus()
+    alert('Revoked. Update PETTER_ADDRESS in your env, then approve the new petter.')
+  } catch (err: any) {
+    console.error('Revoke failed:', err)
+    alert(err?.message || 'Revoke failed')
+  } finally {
+    revoking.value = false
   }
 }
 
