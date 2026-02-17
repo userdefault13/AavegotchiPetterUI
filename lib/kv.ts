@@ -74,6 +74,15 @@ export async function getTransactions(limit = 50): Promise<Transaction[]> {
   }
 }
 
+/** Replace the entire transactions list (used for backfilling gas cost) */
+export async function setTransactions(transactions: Transaction[]): Promise<void> {
+  await kv.del('transactions')
+  if (transactions.length === 0) return
+  const ordered = [...transactions].reverse()
+  await kv.lpush('transactions', ...ordered)
+  await kv.ltrim('transactions', 0, 99)
+}
+
 export async function getTransaction(hash: string): Promise<Transaction | null> {
   const transactions = await getTransactions(100)
   return transactions.find((t) => t.hash === hash) || null

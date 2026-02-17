@@ -45,8 +45,20 @@
           <p class="text-xl font-bold mt-1">{{ stats.transactionsLast24h ?? 0 }}</p>
         </div>
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-4">
-          <p class="text-slate-400 text-sm">Gas Cost</p>
-          <p class="text-xl font-bold mt-1 font-mono">{{ formatGasCost(stats.totalGasCostEth) }}</p>
+          <div class="flex items-center justify-between gap-2">
+            <div>
+              <p class="text-slate-400 text-sm">Gas Cost</p>
+              <p class="text-xl font-bold mt-1 font-mono">{{ formatGasCost(stats.totalGasCostEth) }}</p>
+            </div>
+            <button
+              v-if="isAuthenticated && formatGasCost(stats.totalGasCostEth) === '—'"
+              @click="backfillGas"
+              :disabled="backfillLoading"
+              class="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition disabled:opacity-50 shrink-0"
+            >
+              {{ backfillLoading ? '...' : 'Look up' }}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -241,6 +253,7 @@ const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>(
 const loading = ref(true)
 const historyLoading = ref(false)
 const workerLogsLoading = ref(false)
+const backfillLoading = ref(false)
 const isAuthenticated = ref(false)
 
 const status = computed(() => ({
@@ -293,6 +306,24 @@ const fetchHistory = async () => {
     console.error('Failed to fetch history:', err)
   } finally {
     historyLoading.value = false
+  }
+}
+
+const backfillGas = async () => {
+  if (!isAuthenticated.value) return
+  backfillLoading.value = true
+  try {
+    const res = await $fetch<{ ok: boolean; updated: number }>('/api/transactions/backfill-gas', {
+      method: 'POST',
+    })
+    if (res.ok && res.updated > 0) {
+      await fetchHealth()
+      await fetchHistory()
+    }
+  } catch (err) {
+    console.error('Backfill gas failed:', err)
+  } finally {
+    backfillLoading.value = false
   }
 }
 
