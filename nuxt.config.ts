@@ -31,12 +31,14 @@ export default defineNuxtConfig({
     kvRestApiUrl: process.env.KV_REST_API_URL,
     kvRestApiToken: process.env.KV_REST_API_TOKEN,
     allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
+    allowedAddresses: process.env.ALLOWED_ADDRESSES,
     reportSecret: process.env.REPORT_SECRET,
     petterAddress: process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS,
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
     workerUrl: process.env.WORKER_URL,
     public: {
       allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
+      allowedAddresses: process.env.ALLOWED_ADDRESSES,
     },
   },
 })

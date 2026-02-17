@@ -13,14 +13,15 @@ export default defineEventHandler(async (event) => {
   }
 
   const allowedAddress = config.allowedAddress
-  if (!isAddressAllowed(address, allowedAddress)) {
+  const allowedAddresses = config.allowedAddresses
+  if (!isAddressAllowed(address, allowedAddress, allowedAddresses)) {
     throw createError({
       statusCode: 403,
       message: 'Address not whitelisted',
     })
   }
 
-  const isValid = await verifySignature(address, message, signature, allowedAddress)
+  const isValid = await verifySignature(address, message, signature, allowedAddress, allowedAddresses)
 
   if (!isValid) {
     throw createError({

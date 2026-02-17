@@ -3,16 +3,34 @@ import { getCookie, setCookie, deleteCookie } from 'h3'
 
 const DEFAULT_ALLOWED = '0x2127aa7265d573aa467f1d73554d17890b872e76'.toLowerCase()
 
-export function isAddressAllowed(address: string, allowedAddress?: string): boolean {
-  const allowed = (allowedAddress || DEFAULT_ALLOWED).toLowerCase()
-  return address.toLowerCase() === allowed
+function parseAllowedAddresses(allowedAddress?: string, allowedAddresses?: string): string[] {
+  if (allowedAddresses) {
+    return allowedAddresses
+      .split(',')
+      .map((a) => a.trim().toLowerCase())
+      .filter(Boolean)
+  }
+  if (allowedAddress) {
+    return [allowedAddress.toLowerCase()]
+  }
+  return [DEFAULT_ALLOWED]
+}
+
+export function isAddressAllowed(
+  address: string,
+  allowedAddress?: string,
+  allowedAddresses?: string
+): boolean {
+  const list = parseAllowedAddresses(allowedAddress, allowedAddresses)
+  return list.includes(address.toLowerCase())
 }
 
 export async function verifySignature(
   address: string,
   message: string,
   signature: string,
-  allowedAddress?: string
+  allowedAddress?: string,
+  allowedAddresses?: string
 ): Promise<boolean> {
   try {
     const isValid = await verifyMessage({
@@ -20,7 +38,7 @@ export async function verifySignature(
       message,
       signature: signature as `0x${string}`,
     })
-    return isValid && isAddressAllowed(address, allowedAddress)
+    return isValid && isAddressAllowed(address, allowedAddress, allowedAddresses)
   } catch {
     return false
   }
@@ -35,9 +53,13 @@ export function createSession(event: any, address: string): void {
   })
 }
 
-export function getSession(event: any, allowedAddress?: string): string | null {
+export function getSession(
+  event: any,
+  allowedAddress?: string,
+  allowedAddresses?: string
+): string | null {
   const session = getCookie(event, 'auth_session')
-  if (session && isAddressAllowed(session, allowedAddress)) {
+  if (session && isAddressAllowed(session, allowedAddress, allowedAddresses)) {
     return session
   }
   return null
@@ -47,17 +69,23 @@ export function clearSession(event: any): void {
   deleteCookie(event, 'auth_session')
 }
 
-export function checkAuth(event: any, allowedAddress?: string): boolean {
+export function checkAuth(
+  event: any,
+  allowedAddress?: string,
+  allowedAddresses?: string
+): boolean {
   let allowed = allowedAddress
-  if (!allowed) {
+  let allowedList = allowedAddresses
+  if (!allowed && !allowedList) {
     try {
       const config = useRuntimeConfig()
       allowed = config.allowedAddress
+      allowedList = config.allowedAddresses
     } catch {
       allowed = DEFAULT_ALLOWED
     }
   }
   const session = getCookie(event, 'auth_session')
   if (!session) return false
-  return isAddressAllowed(session, allowed)
+  return isAddressAllowed(session, allowed, allowedList)
 }
