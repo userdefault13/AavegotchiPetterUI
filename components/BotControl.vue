@@ -112,7 +112,13 @@ const triggerBot = async () => {
     await fetchStatus()
   } catch (err: any) {
     console.error('Failed to trigger bot:', err)
-    alert(err?.data?.message || err?.message || 'Failed to trigger bot')
+    const msg =
+      err?.data?.message ||
+      err?.data?.error ||
+      err?.message ||
+      (typeof err?.data === 'string' ? err.data : null) ||
+      'Failed to trigger bot'
+    alert(msg)
   } finally {
     triggering.value = false
   }

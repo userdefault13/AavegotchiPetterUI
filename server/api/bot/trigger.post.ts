@@ -43,12 +43,16 @@ export default defineEventHandler(async (event) => {
         if (json?.error) message = json.error
       } catch {
         if (text?.trim().startsWith('<')) {
-          message = 'Cloudflare Worker error. Check Workers logs for details and ensure secrets (PRIVATE_KEY, WALLET_ADDRESS, BASE_RPC_URL, DASHBOARD_URL, REPORT_SECRET) are set via wrangler secret put.'
+          message =
+            'Cloudflare Worker error. Check Workers logs and ensure secrets (PRIVATE_KEY, WALLET_ADDRESS, BASE_RPC_URL, DASHBOARD_URL, REPORT_SECRET) are set via wrangler secret put.'
         } else if (text) {
-          message = text.slice(0, 200)
+          message = text.slice(0, 500)
         }
       }
-      throw new Error(message)
+      throw createError({
+        statusCode: 500,
+        message,
+      })
     }
 
     const result = text ? JSON.parse(text) : {}
@@ -60,9 +64,17 @@ export default defineEventHandler(async (event) => {
     })
     return { success: true, result }
   } catch (error: any) {
+    const msg = error.message || 'Failed to trigger bot'
+    // Surface connection/network errors more clearly
+    if (msg.includes('fetch') || msg.includes('ECONNREFUSED') || msg.includes('ENOTFOUND')) {
+      throw createError({
+        statusCode: 500,
+        message: `Cannot reach worker: ${msg}. Check WORKER_URL is set and the Cloudflare Worker is deployed.`,
+      })
+    }
     throw createError({
       statusCode: 500,
-      message: error.message || 'Failed to trigger bot',
+      message: msg,
     })
   }
 })
