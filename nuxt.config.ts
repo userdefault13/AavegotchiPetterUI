@@ -33,7 +33,7 @@ export default defineNuxtConfig({
     allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
     allowedAddresses: process.env.ALLOWED_ADDRESSES,
     reportSecret: process.env.REPORT_SECRET,
-    petterAddress: process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0xB4C123857EA7d2f1343D749818C19Af439C65e15',
+    petterAddress: process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0xC223d574809ee1036F274ee25998f1b178a9bCEE',
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
     workerUrl: process.env.WORKER_URL,
     public: {
