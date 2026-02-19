@@ -1,10 +1,11 @@
 import { getHeader } from 'h3'
+import { getPettingIntervalHours } from '~/lib/kv'
 
 /**
- * Returns the dashboard's Base RPC URL for the worker to use.
+ * Returns the dashboard's Base RPC URL and petting interval for the worker to use.
  * Ensures worker and dashboard use the same RPC (dashboard shows 22 gotchis, worker should too).
  */
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
   const reportSecret = config.reportSecret || process.env.REPORT_SECRET
 
@@ -24,5 +25,6 @@ export default defineEventHandler((event) => {
   }
 
   const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
-  return { baseRpcUrl }
+  const pettingIntervalHours = await getPettingIntervalHours()
+  return { baseRpcUrl, pettingIntervalHours }
 })

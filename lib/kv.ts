@@ -161,3 +161,23 @@ export async function isDelegatedOwner(owner: string): Promise<boolean> {
   const owners = await getDelegatedOwners()
   return owners.includes(owner.toLowerCase())
 }
+
+/** Petting interval in hours (min ~30 sec, max 24). Default 12. */
+const PETTING_INTERVAL_KEY = 'bot:petting_interval_hours'
+const DEFAULT_PETTING_INTERVAL = 12
+const MIN_INTERVAL_HOURS = 30 / 3600 // 30 seconds
+
+export async function getPettingIntervalHours(): Promise<number> {
+  try {
+    const val = await kv.get<number>(PETTING_INTERVAL_KEY)
+    if (typeof val === 'number' && val >= MIN_INTERVAL_HOURS && val <= 24) return val
+  } catch {
+    /* ignore */
+  }
+  return DEFAULT_PETTING_INTERVAL
+}
+
+export async function setPettingIntervalHours(hours: number): Promise<void> {
+  const clamped = Math.max(MIN_INTERVAL_HOURS, Math.min(24, hours))
+  await kv.set(PETTING_INTERVAL_KEY, clamped)
+}

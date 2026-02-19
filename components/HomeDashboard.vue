@@ -5,7 +5,7 @@
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 class="text-3xl md:text-4xl font-bold tracking-tight">Aavegotchi Petter</h1>
-          <p class="text-slate-400 mt-1">Automated petting on Base • Every 12 hours</p>
+          <p class="text-slate-400 mt-1">Automated petting on Base • {{ pettingIntervalLabel }}</p>
         </div>
         <div class="flex items-center gap-3">
           <div
@@ -167,6 +167,44 @@
         <DelegationCard />
       </div>
 
+      <!-- Petting Frequency -->
+      <div v-if="isAuthenticated" class="mt-6">
+        <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
+          <h2 class="text-lg font-semibold mb-4">Petting Frequency</h2>
+          <p class="text-slate-400 text-sm mb-4">
+            How often the bot checks and pets your Aavegotchis. Gotchis need petting at least every 12 hours for kinship.
+          </p>
+          <div class="flex flex-wrap items-center gap-4">
+            <label class="flex items-center gap-2">
+              <span class="text-slate-300 text-sm">Interval:</span>
+              <select
+                :value="pettingIntervalHours"
+                :disabled="frequencySaving"
+                @change="(e) => setFrequency(Number((e.target as HTMLSelectElement).value))"
+                class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"
+              >
+                <option v-for="h in hourOptions" :key="h" :value="h">
+                  Every {{ h }} {{ h === 1 ? 'hour' : 'hours' }}
+                </option>
+              </select>
+            </label>
+            <span v-if="frequencySaving" class="text-slate-400 text-sm">Saving...</span>
+            <button
+              v-if="!testModeCountdown"
+              type="button"
+              @click="runTestMode(60)"
+              :disabled="frequencySaving"
+              class="px-4 py-2 text-sm bg-amber-600/80 hover:bg-amber-600 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Test (1 min)
+            </button>
+            <span v-else class="text-amber-400 text-sm font-medium">
+              Reverting in {{ testModeCountdown }}s...
+            </span>
+          </div>
+        </div>
+      </div>
+
       <!-- Delegating Owners -->
       <div v-if="isAuthenticated" class="mt-6">
         <DelegationList />
@@ -216,7 +254,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { disconnect } from '@wagmi/core'
 import { wagmiConfig } from '~/lib/wagmi'
 import { formatEther } from 'viem'
@@ -250,6 +288,10 @@ const history = ref<ExecutionEntry[]>([])
 const delegationStatus = ref<DelegationStatus | null>(null)
 const walletBalance = ref<string | null>(null)
 const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
+const pettingIntervalHours = ref(12)
+const frequencySaving = ref(false)
+const testModeCountdown = ref<number | null>(null)
+let testModeIntervalId: ReturnType<typeof setInterval> | null = null
 const loading = ref(true)
 const historyLoading = ref(false)
 const workerLogsLoading = ref(false)
@@ -269,7 +311,8 @@ const nextPetTimer = computed(() => {
   const lastRun = health.value?.bot?.lastRun
   if (!lastRun) return '—'
   const lastRunMs = new Date(lastRun).getTime()
-  const nextRunMs = lastRunMs + 12 * 60 * 60 * 1000
+  const intervalMs = pettingIntervalHours.value * 60 * 60 * 1000
+  const nextRunMs = lastRunMs + intervalMs
   const now = Date.now()
   if (now >= nextRunMs) return 'Ready'
   const diff = nextRunMs - now
@@ -279,6 +322,15 @@ const nextPetTimer = computed(() => {
 })
 
 const walletAddress = ref<string | null>(null)
+
+const hourOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+
+const pettingIntervalLabel = computed(() => {
+  const h = pettingIntervalHours.value
+  if (h < 1 / 60) return `Every ${Math.round(h * 3600)} sec (test)`
+  if (h < 1) return `Every ${Math.round(h * 60)} min`
+  return `Every ${h} ${h === 1 ? 'hour' : 'hours'}`
+})
 
 const successRateColor = computed(() => {
   const rate = stats.value?.successRate ?? 100
@@ -340,6 +392,64 @@ const fetchWorkerLogs = async () => {
     workerLogs.value = []
   } finally {
     workerLogsLoading.value = false
+  }
+}
+
+const fetchFrequency = async () => {
+  if (!isAuthenticated.value) return
+  try {
+    const data = await $fetch<{ pettingIntervalHours: number }>('/api/bot/frequency')
+    pettingIntervalHours.value = data.pettingIntervalHours
+  } catch {
+    pettingIntervalHours.value = 12
+  }
+}
+
+const setFrequency = async (hours: number) => {
+  if (!isAuthenticated.value) return
+  if (hours < 30 / 3600 || hours > 24) return
+  frequencySaving.value = true
+  try {
+    await $fetch('/api/bot/frequency', {
+      method: 'POST',
+      body: { pettingIntervalHours: hours },
+    })
+    pettingIntervalHours.value = hours
+  } catch (err) {
+    console.error('Failed to set frequency:', err)
+    alert('Failed to update petting frequency')
+  } finally {
+    frequencySaving.value = false
+  }
+}
+
+const runTestMode = async (durationSec: number) => {
+  if (!isAuthenticated.value || frequencySaving.value || testModeCountdown.value != null) return
+  frequencySaving.value = true
+  const intervalHours = durationSec / 3600
+  try {
+    await $fetch('/api/bot/frequency', {
+      method: 'POST',
+      body: { pettingIntervalHours: intervalHours },
+    })
+    pettingIntervalHours.value = intervalHours
+    testModeCountdown.value = durationSec
+    if (testModeIntervalId) clearInterval(testModeIntervalId)
+    testModeIntervalId = setInterval(() => {
+      if (testModeCountdown.value == null) return
+      testModeCountdown.value -= 1
+      if (testModeCountdown.value <= 0) {
+        if (testModeIntervalId) clearInterval(testModeIntervalId)
+        testModeIntervalId = null
+        testModeCountdown.value = null
+        setFrequency(12)
+      }
+    }, 1000)
+  } catch (err) {
+    console.error('Failed to start test mode:', err)
+    alert('Failed to start test mode')
+  } finally {
+    frequencySaving.value = false
   }
 }
 
@@ -412,18 +522,22 @@ const formatGasCost = (eth: number | undefined) => {
   return `${eth.toFixed(4)} ETH`
 }
 
+onUnmounted(() => {
+  if (testModeIntervalId) clearInterval(testModeIntervalId)
+})
+
 onMounted(async () => {
   await checkAuth()
   await fetchHealth()
   if (isAuthenticated.value) {
     await fetchMe()
-    await Promise.all([fetchHistory(), fetchDelegation(), fetchBalance(), fetchWorkerLogs()])
+    await Promise.all([fetchHistory(), fetchDelegation(), fetchBalance(), fetchWorkerLogs(), fetchFrequency()])
   }
   loading.value = false
   setInterval(fetchHealth, 30000)
   if (isAuthenticated.value) {
     setInterval(
-      () => Promise.all([fetchMe(), fetchHistory(), fetchBalance(), fetchWorkerLogs()]),
+      () => Promise.all([fetchMe(), fetchHistory(), fetchBalance(), fetchWorkerLogs(), fetchFrequency()]),
       60000
     )
   }
