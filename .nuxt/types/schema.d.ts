@@ -83,6 +83,8 @@ declare module 'nuxt/schema' {
 
    allowedAddress: string,
 
+   allowedAddresses: string,
+
    reportSecret: string,
 
    petterAddress: string,
@@ -97,6 +99,8 @@ declare module 'nuxt/schema' {
   }
   interface PublicRuntimeConfig {
    allowedAddress: string,
+
+   allowedAddresses: string,
   }
 }
 declare module 'vue' {

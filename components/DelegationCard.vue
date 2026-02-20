@@ -109,9 +109,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getWalletClient, getAccount, writeContract } from '@wagmi/core'
-import { base } from '@wagmi/core/chains'
-import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, ensureRawAddress, shortenAddress } from '~/lib/wagmi'
+import { getWalletClient, writeContract } from '@wagmi/core'
+import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, shortenAddress } from '~/lib/wagmi'
 
 interface DelegationStatus {
   approved: boolean
@@ -141,11 +140,6 @@ const fetchStatus = async () => {
   }
 }
 
-function isEnsError(err: unknown): boolean {
-  const msg = String(err?.message || err)
-  return msg.includes('resolver') || msg.includes('BAD_DATA') || msg.includes('could not decode') || msg.includes('0x"')
-}
-
 const approveDelegation = async () => {
   if (!petterAddress.value) {
     alert('Petter address not configured')
@@ -154,29 +148,20 @@ const approveDelegation = async () => {
   approving.value = true
   try {
     const walletClient = await getWalletClient(wagmiConfig)
-    const account = getAccount(wagmiConfig)
-    if (!walletClient || !account?.address) {
+    if (!walletClient) {
       alert('Please connect your wallet first')
       return
     }
-    const rawAccountAddr = ensureRawAddress(account.address)
-    const rawPetterAddr = ensureRawAddress(petterAddress.value)
     await writeContract(wagmiConfig, {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [rawPetterAddr, true],
-      chainId: base.id,
-      account: { ...account, address: rawAccountAddr },
+      args: [petterAddress.value as `0x${string}`, true],
     })
     await fetchStatus()
   } catch (err: any) {
     console.error('Approve failed:', err)
-    if (isEnsError(err)) {
-      alert('ENS resolution failed. Please connect with a raw wallet address (0x...). ENS names are not supported on Base.')
-    } else {
-      alert(err?.message || 'Approval failed')
-    }
+    alert(err?.message || 'Approval failed')
   } finally {
     approving.value = false
   }
@@ -219,20 +204,15 @@ const doRevoke = async (addr: string) => {
   revoking.value = true
   try {
     const walletClient = await getWalletClient(wagmiConfig)
-    const account = getAccount(wagmiConfig)
-    if (!walletClient || !account?.address) {
+    if (!walletClient) {
       alert('Please connect your wallet first')
       return
     }
-    const rawAccountAddr = ensureRawAddress(account.address)
-    const rawRevokeAddr = ensureRawAddress(addr)
     await writeContract(wagmiConfig, {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [rawRevokeAddr, false],
-      chainId: base.id,
-      account: { ...account, address: rawAccountAddr },
+      args: [addr as `0x${string}`, false],
     })
     if (addr.toLowerCase() === petterAddress.value?.toLowerCase()) {
       await $fetch('/api/delegation/unregister', { method: 'POST' })
@@ -241,11 +221,7 @@ const doRevoke = async (addr: string) => {
     alert('Revoked successfully.')
   } catch (err: any) {
     console.error('Revoke failed:', err)
-    if (isEnsError(err)) {
-      alert('ENS resolution failed. Please connect with a raw wallet address (0x...). ENS names are not supported on Base.')
-    } else {
-      alert(err?.message || 'Revoke failed')
-    }
+    alert(err?.message || 'Revoke failed')
   } finally {
     revoking.value = false
   }

@@ -15,6 +15,16 @@ declare module "nitropack/types" {
     '/api/auth/verify': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/verify.post').default>>>>
     }
+    '/api/bot/config': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/config.get').default>>>>
+    }
+    '/api/bot/frequency': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/frequency.get').default>>>>
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/frequency.post').default>>>>
+    }
+    '/api/bot/logs': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/logs.get').default>>>>
+    }
     '/api/bot/report': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/report.post').default>>>>
     }
@@ -33,6 +43,9 @@ declare module "nitropack/types" {
     '/api/delegated-owners': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegated-owners.get').default>>>>
     }
+    '/api/delegation/clear-all': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/clear-all.post').default>>>>
+    }
     '/api/delegation/owners': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/owners.get').default>>>>
     }
@@ -41,6 +54,9 @@ declare module "nitropack/types" {
     }
     '/api/delegation/status': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/status.get').default>>>>
+    }
+    '/api/delegation/unregister': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/unregister.post').default>>>>
     }
     '/api/errors/clear': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/errors/clear.post').default>>>>
@@ -56,6 +72,9 @@ declare module "nitropack/types" {
     }
     '/api/transactions/:hash': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/[hash].get').default>>>>
+    }
+    '/api/transactions/backfill-gas': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/backfill-gas.post').default>>>>
     }
     '/api/transactions': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/index.get').default>>>>
