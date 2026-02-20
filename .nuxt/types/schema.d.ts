@@ -101,6 +101,8 @@ declare module 'nuxt/schema' {
    allowedAddress: string,
 
    allowedAddresses: string,
+
+   petterAddress: string,
   }
 }
 declare module 'vue' {

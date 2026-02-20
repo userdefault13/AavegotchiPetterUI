@@ -277,15 +277,9 @@ type ExecutionEntry =
   | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; gasCostWei?: string; tokenIds: string[] }
   | { type: 'manual'; id: string; timestamp: number; message: string; petted?: number }
 
-interface DelegationStatus {
-  approved: boolean
-  registered: boolean
-  gotchiCount: number
-}
-
 const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
-const delegationStatus = ref<DelegationStatus | null>(null)
+const { status: delegationStatus, fetchStatus: fetchDelegation } = useDelegationStatus()
 const walletBalance = ref<string | null>(null)
 const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
 const pettingIntervalHours = ref(12)
@@ -453,14 +447,6 @@ const runTestMode = async (durationSec: number) => {
   }
 }
 
-const fetchDelegation = async () => {
-  try {
-    const data = await $fetch<DelegationStatus>('/api/delegation/status')
-    delegationStatus.value = data
-  } catch (err) {
-    delegationStatus.value = null
-  }
-}
 
 const fetchMe = async () => {
   try {

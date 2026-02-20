@@ -1,10 +1,10 @@
 {
-  "_BgO3IXLe.js": {
+  "_C87zXR28.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BgO3IXLe.js",
+    "file": "C87zXR28.js",
     "name": "index",
     "isDynamicEntry": true,
     "imports": [
@@ -19,7 +19,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "EmLYteef.js",
+    "file": "yljgxSAy.js",
     "name": "error-404",
     "src": "node_modules/nuxt/dist/app/components/error-404.vue",
     "isDynamicEntry": true,
@@ -39,7 +39,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "M8J-wyyY.js",
+    "file": "BYXAXP6k.js",
     "name": "error-500",
     "src": "node_modules/nuxt/dist/app/components/error-500.vue",
     "isDynamicEntry": true,
@@ -59,12 +59,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C2bNXUNV.js",
+    "file": "C6U2NV7D.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
     "dynamicImports": [
-      "_BgO3IXLe.js",
+      "_C87zXR28.js",
       "node_modules/nuxt/dist/app/components/error-404.vue",
       "node_modules/nuxt/dist/app/components/error-500.vue"
     ],
@@ -75,12 +75,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C2evI__8.js",
+    "file": "hBpi3ciK.js",
     "name": "ccip",
     "src": "node_modules/viem/_esm/utils/ccip.js",
     "isDynamicEntry": true,
     "imports": [
-      "_BgO3IXLe.js",
+      "_C87zXR28.js",
       "node_modules/nuxt/dist/app/entry.js"
     ]
   }

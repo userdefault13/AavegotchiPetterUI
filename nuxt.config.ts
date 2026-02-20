@@ -39,6 +39,7 @@ export default defineNuxtConfig({
     public: {
       allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
       allowedAddresses: process.env.ALLOWED_ADDRESSES,
+      petterAddress: process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF',
     },
   },
 })

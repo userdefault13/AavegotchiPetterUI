@@ -1,17 +1,9 @@
 import { createConfig, http, injected } from '@wagmi/core'
 import { base } from '@wagmi/core/chains'
+import { ensureRawAddress as ensureRawAddressFromAddress } from './address'
 
-/** Ensures address is a raw 0x address. Rejects ENS names (Base ENS resolution fails). */
-export function ensureRawAddress(value: string): `0x${string}` {
-  const trimmed = value?.trim() || ''
-  if (!trimmed.startsWith('0x') || trimmed.length !== 42) {
-    throw new Error('Invalid address. Use a raw wallet address (0x...). ENS names are not supported on Base.')
-  }
-  if (trimmed.includes('.')) {
-    throw new Error('Please use a raw wallet address (0x...). ENS names are not supported on Base.')
-  }
-  return trimmed as `0x${string}`
-}
+/** Re-export for convenience. Ensures address is a raw 0x address. Rejects ENS names (Base ENS resolution fails). */
+export const ensureRawAddress = ensureRawAddressFromAddress
 
 /** Shortens address for display. */
 export function shortenAddress(addr: string): string {
@@ -43,6 +35,13 @@ export const AAVEGOTCHI_FACET_ABI = [
       { name: '_operator', type: 'address' },
     ],
     outputs: [{ type: 'bool' }],
+  },
+  {
+    type: 'function',
+    name: 'tokenIdsOfOwner',
+    stateMutability: 'view',
+    inputs: [{ name: '_owner', type: 'address' }],
+    outputs: [{ type: 'uint32[]' }],
   },
   {
     type: 'function',

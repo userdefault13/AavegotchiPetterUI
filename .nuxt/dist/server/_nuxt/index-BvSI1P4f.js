@@ -129,38 +129,49 @@ _sfc_main$4.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/BotControl.vue");
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
+function useDelegationStatus() {
+  var _a;
+  const config = useRuntimeConfig();
+  const petterAddress = ((_a = config.public) == null ? void 0 : _a.petterAddress) || "0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF";
+  const status = ref(null);
+  const loading = ref(true);
+  const fetchStatus = async () => {
+    return;
+  };
+  return { status, loading, petterAddress, fetchStatus };
+}
 const _sfc_main$3 = /* @__PURE__ */ defineComponent({
   __name: "DelegationCard",
   __ssrInlineRender: true,
   setup(__props) {
-    const status = ref(null);
-    const petterAddress = ref("");
+    const { status, loading, petterAddress } = useDelegationStatus();
     const revokeAddress = ref("");
-    const loading = ref(true);
     const approving = ref(false);
     const registering = ref(false);
     const revoking = ref(false);
     return (_ctx, _push, _parent, _attrs) => {
       var _a, _b, _c, _d, _e, _f, _g, _h;
       _push(`<div${ssrRenderAttrs(mergeProps({ class: "delegation-card" }, _attrs))}><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-2">EIP PetOperator Delegation</h2><p class="text-slate-400 text-sm mb-4"> Keep your Aavegotchis in your wallet. Approve our petter to pet on your behalf—no transfer needed. </p>`);
-      if (loading.value) {
+      if (unref(loading)) {
         _push(`<div class="text-center py-4"><p class="text-slate-400">Loading...</p></div>`);
+      } else if (!unref(status)) {
+        _push(`<div class="text-center py-4"><p class="text-slate-400">Connect your wallet to view delegation status. If already connected, refresh the page.</p></div>`);
       } else {
-        _push(`<div class="space-y-4"><div class="bg-white/5 rounded-lg p-4 font-mono text-sm break-all"><span class="text-slate-400">Petter address: </span> ${ssrInterpolate(petterAddress.value || "—")}</div><div class="space-y-2"><div class="flex items-center gap-2"><span class="${ssrRenderClass([((_a = status.value) == null ? void 0 : _a.approved) ? "bg-emerald-500" : "bg-amber-500", "w-3 h-3 rounded-full"])}"></span><span>${ssrInterpolate(((_b = status.value) == null ? void 0 : _b.approved) ? "Approved" : "Not approved")}</span></div><div class="flex items-center gap-2"><span class="${ssrRenderClass([((_c = status.value) == null ? void 0 : _c.registered) ? "bg-emerald-500" : "bg-slate-500", "w-3 h-3 rounded-full"])}"></span><span>${ssrInterpolate(((_d = status.value) == null ? void 0 : _d.registered) ? "Registered" : "Not registered")}</span></div>`);
-        if (((_e = status.value) == null ? void 0 : _e.gotchiCount) !== void 0) {
-          _push(`<div class="text-sm text-slate-400">${ssrInterpolate(status.value.gotchiCount)} Aavegotchi(es) in your wallet </div>`);
+        _push(`<div class="space-y-4"><div class="bg-white/5 rounded-lg p-4 font-mono text-sm break-all"><span class="text-slate-400">Petter address: </span> ${ssrInterpolate(unref(petterAddress) || "—")}</div><div class="space-y-2"><div class="flex items-center gap-2"><span class="${ssrRenderClass([((_a = unref(status)) == null ? void 0 : _a.approved) ? "bg-emerald-500" : "bg-amber-500", "w-3 h-3 rounded-full"])}"></span><span>${ssrInterpolate(((_b = unref(status)) == null ? void 0 : _b.approved) ? "Approved" : "Not approved")}</span></div><div class="flex items-center gap-2"><span class="${ssrRenderClass([((_c = unref(status)) == null ? void 0 : _c.registered) ? "bg-emerald-500" : "bg-slate-500", "w-3 h-3 rounded-full"])}"></span><span>${ssrInterpolate(((_d = unref(status)) == null ? void 0 : _d.registered) ? "Registered" : "Not registered")}</span></div>`);
+        if (((_e = unref(status)) == null ? void 0 : _e.gotchiCount) !== void 0) {
+          _push(`<div class="text-sm text-slate-400">${ssrInterpolate(unref(status).gotchiCount)} Aavegotchi(es) in your wallet </div>`);
         } else {
           _push(`<!---->`);
         }
         _push(`</div><div class="flex flex-col gap-2">`);
-        if (!((_f = status.value) == null ? void 0 : _f.approved)) {
+        if (!((_f = unref(status)) == null ? void 0 : _f.approved)) {
           _push(`<button${ssrIncludeBooleanAttr(approving.value) ? " disabled" : ""} class="px-6 py-3 bg-amber-600 text-white rounded-lg hover:bg-amber-700 disabled:opacity-50 font-medium">${ssrInterpolate(approving.value ? "Confirm in wallet..." : "1. Approve Petter (sign tx)")}</button>`);
-        } else if ((_g = status.value) == null ? void 0 : _g.canRegister) {
+        } else if ((_g = unref(status)) == null ? void 0 : _g.canRegister) {
           _push(`<!--[--><button${ssrIncludeBooleanAttr(registering.value) ? " disabled" : ""} class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium">${ssrInterpolate(registering.value ? "Registering..." : "2. Register for Auto-Petting")}</button><button${ssrIncludeBooleanAttr(revoking.value) ? " disabled" : ""} class="px-4 py-2 text-slate-400 hover:text-white text-sm">${ssrInterpolate(revoking.value ? "Revoking..." : "Revoke approval")}</button><!--]-->`);
-        } else if ((_h = status.value) == null ? void 0 : _h.registered) {
+        } else if ((_h = unref(status)) == null ? void 0 : _h.registered) {
           _push(`<!--[--><div class="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm border border-emerald-500/50"> ✓ You&#39;re all set! Your Aavegotchis will be petted every 12 hours. </div><button${ssrIncludeBooleanAttr(revoking.value) ? " disabled" : ""} class="px-4 py-2 bg-red-600/80 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 text-sm font-medium">${ssrInterpolate(revoking.value ? "Revoking..." : "Revoke & Change Petter")}</button><div class="mt-2 pt-2 border-t border-white/10"><p class="text-slate-400 text-xs mb-1">Revoke a different petter address:</p><div class="flex flex-wrap gap-2 items-center">`);
-          if (petterAddress.value) {
-            _push(`<button type="button"${ssrIncludeBooleanAttr(revoking.value) ? " disabled" : ""} class="px-3 py-1.5 bg-red-600/60 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50"> Revoke ${ssrInterpolate(unref(shortenAddress)(petterAddress.value))}</button>`);
+          if (unref(petterAddress)) {
+            _push(`<button type="button"${ssrIncludeBooleanAttr(revoking.value) ? " disabled" : ""} class="px-3 py-1.5 bg-red-600/60 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50"> Revoke ${ssrInterpolate(unref(shortenAddress)(unref(petterAddress)))}</button>`);
           } else {
             _push(`<!---->`);
           }
@@ -223,7 +234,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   setup(__props) {
     const health = ref(null);
     const history = ref([]);
-    const delegationStatus = ref(null);
+    const { status: delegationStatus } = useDelegationStatus();
     const walletBalance = ref(null);
     const workerLogs = ref([]);
     const pettingIntervalHours = ref(12);
@@ -337,7 +348,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       }
       _push(`</div></div></div>`);
       if (isAuthenticated.value) {
-        _push(`<div class="grid md:grid-cols-2 gap-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Wallet</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Address</p><p class="font-mono text-sm break-all mt-1">${ssrInterpolate(walletAddress.value || "—")}</p></div><div><p class="text-slate-400 text-sm">Balance (ETH)</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(walletBalance.value ?? "—")}</p></div><div><p class="text-slate-400 text-sm">Gotchis Delegated</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(((_a = delegationStatus.value) == null ? void 0 : _a.gotchiCount) ?? "—")}</p></div></div></div><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Bot Status</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Last Run</p><p class="mt-1">${ssrInterpolate(formatDate(status.value.lastRun))}</p></div>`);
+        _push(`<div class="grid md:grid-cols-2 gap-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Wallet</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Address</p><p class="font-mono text-sm break-all mt-1">${ssrInterpolate(walletAddress.value || "—")}</p></div><div><p class="text-slate-400 text-sm">Balance (ETH)</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(walletBalance.value ?? "—")}</p></div><div><p class="text-slate-400 text-sm">Gotchis Delegated</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(((_a = unref(delegationStatus)) == null ? void 0 : _a.gotchiCount) ?? "—")}</p></div></div></div><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Bot Status</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Last Run</p><p class="mt-1">${ssrInterpolate(formatDate(status.value.lastRun))}</p></div>`);
         if (status.value.lastRunMessage && !status.value.lastError) {
           _push(`<div><p class="text-slate-400 text-sm">Last Outcome</p><p class="text-slate-300 text-sm mt-1">${ssrInterpolate(status.value.lastRunMessage)}</p></div>`);
         } else {
@@ -475,4 +486,4 @@ _sfc_main.setup = (props, ctx) => {
 export {
   _sfc_main as default
 };
-//# sourceMappingURL=index-QwMYz5_C.js.map
+//# sourceMappingURL=index-BvSI1P4f.js.map

@@ -10,6 +10,10 @@
         <p class="text-slate-400">Loading...</p>
       </div>
 
+      <div v-else-if="!status" class="text-center py-4">
+        <p class="text-slate-400">Connect your wallet to view delegation status. If already connected, refresh the page.</p>
+      </div>
+
       <div v-else class="space-y-4">
         <div class="bg-white/5 rounded-lg p-4 font-mono text-sm break-all">
           <span class="text-slate-400">Petter address: </span>
@@ -111,43 +115,22 @@
 import { ref, onMounted } from 'vue'
 import { getWalletClient, writeContract } from '@wagmi/core'
 import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, shortenAddress, ensureRawAddress } from '~/lib/wagmi'
+import { useDelegationStatus } from '~/composables/useDelegationStatus'
 
-interface DelegationStatus {
-  approved: boolean
-  registered: boolean
-  gotchiCount: number
-  petterAddress: string
-  canRegister: boolean
-}
-
-const status = ref<DelegationStatus | null>(null)
-const petterAddress = ref('')
+const { status, loading, petterAddress, fetchStatus } = useDelegationStatus()
 const revokeAddress = ref('')
-const loading = ref(true)
 const approving = ref(false)
 const registering = ref(false)
 const revoking = ref(false)
 
-const fetchStatus = async () => {
-  try {
-    const statusRes = await $fetch<DelegationStatus>('/api/delegation/status')
-    status.value = statusRes
-    petterAddress.value = statusRes.petterAddress || ''
-  } catch (err) {
-    console.error('Failed to fetch delegation status:', err)
-  } finally {
-    loading.value = false
-  }
-}
-
 const approveDelegation = async () => {
-  if (!petterAddress.value) {
+  if (!petterAddress) {
     alert('Petter address not configured')
     return
   }
   approving.value = true
   try {
-    const rawAddr = ensureRawAddress(petterAddress.value)
+    const rawAddr = ensureRawAddress(petterAddress)
     const walletClient = await getWalletClient(wagmiConfig)
     if (!walletClient) {
       alert('Please connect your wallet first')
@@ -181,7 +164,7 @@ const register = async () => {
 }
 
 const revokeDelegation = async () => {
-  if (!petterAddress.value) return
+  if (!petterAddress) return
   if (!confirm('Revoke the current petter? You will need to approve again after updating the petter address.')) return
   await doRevoke(petterAddress.value)
 }
@@ -216,7 +199,7 @@ const doRevoke = async (addr: string) => {
       functionName: 'setPetOperatorForAll',
       args: [rawAddr, false],
     })
-    if (addr.toLowerCase() === petterAddress.value?.toLowerCase()) {
+    if (addr.toLowerCase() === petterAddress?.toLowerCase()) {
       await $fetch('/api/delegation/unregister', { method: 'POST' })
     }
     await fetchStatus()

@@ -382,7 +382,7 @@ const _routes = [
     name: "index",
     path: "/",
     meta: __nuxt_page_meta || {},
-    component: () => import("./_nuxt/index-QwMYz5_C.js")
+    component: () => import("./_nuxt/index-BvSI1P4f.js")
   }
 ];
 const ROUTE_KEY_PARENTHESES_RE = /(:\w+)\([^)]+\)/g;

@@ -52,8 +52,8 @@ declare module "nitropack/types" {
     '/api/delegation/register': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/register.post').default>>>>
     }
-    '/api/delegation/status': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/status.get').default>>>>
+    '/api/delegation/registered': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/registered.get').default>>>>
     }
     '/api/delegation/unregister': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/delegation/unregister.post').default>>>>
