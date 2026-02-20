@@ -15,8 +15,8 @@ export interface DelegationStatus {
   canRegister: boolean
 }
 
-const CORRECT_PETTER_ADDRESS = '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' as const
-const DEPRECATED_PETTER_ADDRESSES = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
+const CORRECT_PETTER_ADDRESS = '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D' as const
+const DEPRECATED_PETTER_ADDRESSES = ['0xb4c123857ea7d2f1343d749818c19af439c65e15', '0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf']
 
 export function useDelegationStatus() {
   const config = useRuntimeConfig()

@@ -34,9 +34,9 @@ export default defineNuxtConfig({
     allowedAddresses: process.env.ALLOWED_ADDRESSES,
     reportSecret: process.env.REPORT_SECRET,
     petterAddress: (() => {
-      const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF'
-      const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
-      return deprecated.includes((addr || '').toLowerCase()) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
+      const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D'
+      const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15', '0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf']
+      return deprecated.includes((addr || '').toLowerCase()) ? '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D' : addr
     })(),
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
     workerUrl: process.env.WORKER_URL,
@@ -46,9 +46,9 @@ export default defineNuxtConfig({
       allowedAddresses: process.env.ALLOWED_ADDRESSES,
       baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
       petterAddress: (() => {
-        const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF'
-        const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
-        return deprecated.includes((addr || '').toLowerCase()) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
+        const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D'
+        const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15', '0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf']
+        return deprecated.includes((addr || '').toLowerCase()) ? '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D' : addr
       })(),
       /** Optional: address to fetch balance from (e.g. EIP-7702 delegate). If set, Balance (ETH) shows this address's balance. */
       petterBalanceAddress: process.env.PETTER_BALANCE_ADDRESS || '',
