@@ -68,10 +68,12 @@ export default defineEventHandler(async (event) => {
       })
     )
 
-    const totalGotchis = results.reduce((sum, r) => sum + r.gotchiCount, 0)
+    // Only include owners who have approved THIS petter on-chain (KV alone is stale)
+    const approvedOwners = results.filter((r) => r.approved)
+    const totalGotchis = approvedOwners.reduce((sum, r) => sum + r.gotchiCount, 0)
 
     return {
-      owners: results,
+      owners: approvedOwners.map(({ address, gotchiCount }) => ({ address, gotchiCount })),
       totalGotchis,
     }
   } catch (err: any) {
