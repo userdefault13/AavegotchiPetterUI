@@ -49,6 +49,8 @@ export default defineNuxtConfig({
         const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
         return deprecated.includes((addr || '').toLowerCase()) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
       })(),
+      /** Optional: address to fetch balance from (e.g. EIP-7702 delegate). If set, Balance (ETH) shows this address's balance. */
+      petterBalanceAddress: process.env.PETTER_BALANCE_ADDRESS || '',
     },
   },
 })

@@ -81,6 +81,10 @@
               <p class="text-slate-400 text-sm">Address</p>
               <p class="font-mono text-sm break-all mt-1">{{ petterAddress || '—' }}</p>
             </div>
+            <div v-if="balanceAddress && balanceAddress.toLowerCase() !== (petterAddress || '').toLowerCase()">
+              <p class="text-slate-400 text-sm">Balance from (delegate)</p>
+              <p class="font-mono text-sm break-all mt-1">{{ balanceAddress }}</p>
+            </div>
             <div>
               <p class="text-slate-400 text-sm">Balance (ETH)</p>
               <p class="font-mono text-lg font-bold mt-1">{{ petterBalance ?? '—' }}</p>
@@ -289,6 +293,11 @@ type ExecutionEntry =
 const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
 const { status: delegationStatus, fetchStatus: fetchDelegation, petterAddress } = useDelegationStatus()
+const balanceAddress = computed(() => {
+  const config = useRuntimeConfig()
+  const addr = (config.public?.petterBalanceAddress as string) || ''
+  return addr.trim() || petterAddress
+})
 const petterBalance = ref<string | null>(null)
 const balanceRefreshing = ref(false)
 const totalGotchisDelegated = ref<number | null>(null)
@@ -458,7 +467,7 @@ const runTestMode = async (durationSec: number) => {
 
 
 const fetchPetterBalance = async () => {
-  const addr = petterAddress
+  const addr = balanceAddress.value
   if (!addr) return
   balanceRefreshing.value = true
   try {
