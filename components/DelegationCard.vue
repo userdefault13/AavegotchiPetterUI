@@ -110,7 +110,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getWalletClient, writeContract } from '@wagmi/core'
-import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, shortenAddress } from '~/lib/wagmi'
+import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, shortenAddress, ensureRawAddress } from '~/lib/wagmi'
 
 interface DelegationStatus {
   approved: boolean
@@ -147,6 +147,7 @@ const approveDelegation = async () => {
   }
   approving.value = true
   try {
+    const rawAddr = ensureRawAddress(petterAddress.value)
     const walletClient = await getWalletClient(wagmiConfig)
     if (!walletClient) {
       alert('Please connect your wallet first')
@@ -156,7 +157,7 @@ const approveDelegation = async () => {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [petterAddress.value as `0x${string}`, true],
+      args: [rawAddr, true],
     })
     await fetchStatus()
   } catch (err: any) {
@@ -203,6 +204,7 @@ const revokeSpecificAddress = async () => {
 const doRevoke = async (addr: string) => {
   revoking.value = true
   try {
+    const rawAddr = ensureRawAddress(addr)
     const walletClient = await getWalletClient(wagmiConfig)
     if (!walletClient) {
       alert('Please connect your wallet first')
@@ -212,7 +214,7 @@ const doRevoke = async (addr: string) => {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [addr as `0x${string}`, false],
+      args: [rawAddr, false],
     })
     if (addr.toLowerCase() === petterAddress.value?.toLowerCase()) {
       await $fetch('/api/delegation/unregister', { method: 'POST' })

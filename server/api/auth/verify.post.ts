@@ -1,4 +1,5 @@
 import { verifySignature, createSession, isAddressAllowed } from '~/lib/auth'
+import { ensureRawAddress } from '~/lib/address'
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -9,6 +10,15 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       message: 'Missing required fields',
+    })
+  }
+
+  try {
+    ensureRawAddress(address)
+  } catch (addrErr: any) {
+    throw createError({
+      statusCode: 400,
+      message: addrErr?.message || 'Invalid address. Use a raw wallet address (0x...). ENS is not supported on Base.',
     })
   }
 

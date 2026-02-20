@@ -1,5 +1,6 @@
 import { verifyMessage } from 'viem'
 import { getCookie, setCookie, deleteCookie } from 'h3'
+import { ensureRawAddress } from './address'
 
 const DEFAULT_ALLOWED = '0x2127aa7265d573aa467f1d73554d17890b872e76'.toLowerCase()
 
@@ -33,8 +34,9 @@ export async function verifySignature(
   allowedAddresses?: string
 ): Promise<boolean> {
   try {
+    const rawAddr = ensureRawAddress(address)
     const isValid = await verifyMessage({
-      address: address as `0x${string}`,
+      address: rawAddr,
       message,
       signature: signature as `0x${string}`,
     })
@@ -45,7 +47,8 @@ export async function verifySignature(
 }
 
 export function createSession(event: any, address: string): void {
-  setCookie(event, 'auth_session', address, {
+  const rawAddr = ensureRawAddress(address)
+  setCookie(event, 'auth_session', rawAddr, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
@@ -59,7 +62,8 @@ export function getSession(
   allowedAddresses?: string
 ): string | null {
   const session = getCookie(event, 'auth_session')
-  if (session && isAddressAllowed(session, allowedAddress, allowedAddresses)) {
+  if (!session || session.includes('.')) return null
+  if (isAddressAllowed(session, allowedAddress, allowedAddresses)) {
     return session
   }
   return null
@@ -86,6 +90,6 @@ export function checkAuth(
     }
   }
   const session = getCookie(event, 'auth_session')
-  if (!session) return false
+  if (!session || session.includes('.')) return false
   return isAddressAllowed(session, allowed, allowedList)
 }

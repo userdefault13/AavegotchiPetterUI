@@ -1,6 +1,6 @@
 import { createPublicClient, http, parseAbi } from 'viem'
 import { base } from 'viem/chains'
-import { getDelegatedOwners, checkAuth } from '~/lib'
+import { getDelegatedOwners, checkAuth, isRawAddress } from '~/lib'
 
 const AAVEGOTCHI_DIAMOND_ADDRESS = '0xA99c4B08201F2913Db8D28e71d020c4298F29dBF' as const
 
@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
 
   try {
     const owners = await getDelegatedOwners()
-    if (owners.length === 0) {
+    const rawOwners = owners.filter((a) => isRawAddress(a))
+    if (rawOwners.length === 0) {
       return { owners: [], totalGotchis: 0 }
     }
 
@@ -36,7 +37,7 @@ export default defineEventHandler(async (event) => {
     })
 
     const results = await Promise.all(
-      owners.map(async (address) => {
+      rawOwners.map(async (address) => {
         try {
           const tokenIds = await client.readContract({
             address: AAVEGOTCHI_DIAMOND_ADDRESS,

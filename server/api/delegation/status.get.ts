@@ -1,7 +1,7 @@
 import { createPublicClient, http, parseAbi } from 'viem'
 import { base } from 'viem/chains'
 import { getCookie } from 'h3'
-import { isDelegatedOwner, checkAuth } from '~/lib'
+import { isDelegatedOwner, checkAuth, ensureRawAddress } from '~/lib'
 
 const AAVEGOTCHI_DIAMOND_ADDRESS = '0xA99c4B08201F2913Db8D28e71d020c4298F29dBF' as const
 
@@ -36,7 +36,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const ownerAddress = session as `0x${string}`
+  let ownerAddress: `0x${string}`
+  let rawPetterAddress: `0x${string}`
+  try {
+    ownerAddress = ensureRawAddress(session)
+    rawPetterAddress = ensureRawAddress(petterAddress)
+  } catch (addrErr: any) {
+    throw createError({
+      statusCode: 400,
+      message: addrErr?.message || 'Invalid address format',
+    })
+  }
 
   try {
     const client = createPublicClient({
@@ -49,7 +59,7 @@ export default defineEventHandler(async (event) => {
         address: AAVEGOTCHI_DIAMOND_ADDRESS,
         abi: AAVEGOTCHI_FACET_ABI,
         functionName: 'isPetOperatorForAll',
-        args: [ownerAddress, petterAddress as `0x${string}`],
+        args: [ownerAddress, rawPetterAddress],
       }),
       isDelegatedOwner(ownerAddress),
     ])
@@ -69,7 +79,7 @@ export default defineEventHandler(async (event) => {
       approved,
       registered,
       gotchiCount,
-      petterAddress,
+      petterAddress: rawPetterAddress,
       canRegister: approved && !registered,
     }
   } catch (err: any) {
