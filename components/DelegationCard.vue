@@ -45,14 +45,22 @@
           >
             {{ approving ? 'Confirm in wallet...' : '1. Approve Petter (sign tx)' }}
           </button>
-          <button
-            v-else-if="status?.canRegister"
-            @click="register"
-            :disabled="registering"
-            class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium"
-          >
-            {{ registering ? 'Registering...' : '2. Register for Auto-Petting' }}
-          </button>
+          <template v-else-if="status?.canRegister">
+            <button
+              @click="register"
+              :disabled="registering"
+              class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 font-medium"
+            >
+              {{ registering ? 'Registering...' : '2. Register for Auto-Petting' }}
+            </button>
+            <button
+              @click="revokeDelegation"
+              :disabled="revoking"
+              class="px-4 py-2 text-slate-400 hover:text-white text-sm"
+            >
+              {{ revoking ? 'Revoking...' : 'Revoke approval' }}
+            </button>
+          </template>
           <template v-else-if="status?.registered">
             <div class="px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg text-sm border border-emerald-500/50">
               ✓ You're all set! Your Aavegotchis will be petted every 12 hours.
@@ -68,12 +76,13 @@
               <p class="text-slate-400 text-xs mb-1">Revoke a different petter address:</p>
               <div class="flex flex-wrap gap-2 items-center">
                 <button
+                  v-if="petterAddress"
                   type="button"
-                  @click="confirmRevoke('0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF')"
+                  @click="confirmRevoke(petterAddress)"
                   :disabled="revoking"
                   class="px-3 py-1.5 bg-red-600/60 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50"
                 >
-                  Revoke 0xB4C1...e15
+                  Revoke {{ shortenAddress(petterAddress) }}
                 </button>
                 <input
                   v-model="revokeAddress"
@@ -100,9 +109,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getWalletClient, writeContract } from '@wagmi/core'
+import { getWalletClient, getAccount, writeContract } from '@wagmi/core'
 import { base } from '@wagmi/core/chains'
-import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI } from '~/lib/wagmi'
+import { wagmiConfig, AAVEGOTCHI_DIAMOND_ADDRESS, AAVEGOTCHI_FACET_ABI, ensureRawAddress, shortenAddress } from '~/lib/wagmi'
 
 interface DelegationStatus {
   approved: boolean
@@ -132,6 +141,11 @@ const fetchStatus = async () => {
   }
 }
 
+function isEnsError(err: unknown): boolean {
+  const msg = String(err?.message || err)
+  return msg.includes('resolver') || msg.includes('BAD_DATA') || msg.includes('could not decode') || msg.includes('0x"')
+}
+
 const approveDelegation = async () => {
   if (!petterAddress.value) {
     alert('Petter address not configured')
@@ -140,21 +154,29 @@ const approveDelegation = async () => {
   approving.value = true
   try {
     const walletClient = await getWalletClient(wagmiConfig)
-    if (!walletClient) {
+    const account = getAccount(wagmiConfig)
+    if (!walletClient || !account?.address) {
       alert('Please connect your wallet first')
       return
     }
+    const rawAccountAddr = ensureRawAddress(account.address)
+    const rawPetterAddr = ensureRawAddress(petterAddress.value)
     await writeContract(wagmiConfig, {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [petterAddress.value as `0x${string}`, true],
+      args: [rawPetterAddr, true],
       chainId: base.id,
+      account: { ...account, address: rawAccountAddr },
     })
     await fetchStatus()
   } catch (err: any) {
     console.error('Approve failed:', err)
-    alert(err?.message || 'Approval failed')
+    if (isEnsError(err)) {
+      alert('ENS resolution failed. Please connect with a raw wallet address (0x...). ENS names are not supported on Base.')
+    } else {
+      alert(err?.message || 'Approval failed')
+    }
   } finally {
     approving.value = false
   }
@@ -197,16 +219,20 @@ const doRevoke = async (addr: string) => {
   revoking.value = true
   try {
     const walletClient = await getWalletClient(wagmiConfig)
-    if (!walletClient) {
+    const account = getAccount(wagmiConfig)
+    if (!walletClient || !account?.address) {
       alert('Please connect your wallet first')
       return
     }
+    const rawAccountAddr = ensureRawAddress(account.address)
+    const rawRevokeAddr = ensureRawAddress(addr)
     await writeContract(wagmiConfig, {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [addr as `0x${string}`, false],
+      args: [rawRevokeAddr, false],
       chainId: base.id,
+      account: { ...account, address: rawAccountAddr },
     })
     if (addr.toLowerCase() === petterAddress.value?.toLowerCase()) {
       await $fetch('/api/delegation/unregister', { method: 'POST' })
@@ -215,7 +241,11 @@ const doRevoke = async (addr: string) => {
     alert('Revoked successfully.')
   } catch (err: any) {
     console.error('Revoke failed:', err)
-    alert(err?.message || 'Revoke failed')
+    if (isEnsError(err)) {
+      alert('ENS resolution failed. Please connect with a raw wallet address (0x...). ENS names are not supported on Base.')
+    } else {
+      alert(err?.message || 'Revoke failed')
+    }
   } finally {
     revoking.value = false
   }

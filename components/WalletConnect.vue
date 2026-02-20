@@ -53,7 +53,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getAccount, connect, disconnect, signMessage as wagmiSignMessage } from '@wagmi/core'
-import { wagmiConfig, metaMaskConnector, coinbaseConnector } from '~/lib/wagmi'
+import { wagmiConfig, metaMaskConnector, coinbaseConnector, ensureRawAddress } from '~/lib/wagmi'
 
 const config = useRuntimeConfig()
 const allowedAddress = (config.public?.allowedAddress || '0x2127aa7265d573aa467f1d73554d17890b872e76').toLowerCase()
@@ -87,10 +87,18 @@ const connectWallet = async (target: 'metaMask' | 'coinbaseWallet') => {
     const result = await connect(wagmiConfig, { connector })
 
     if (result?.accounts?.[0]) {
-      address.value = result.accounts[0]
+      const rawAddr = result.accounts[0]
+      try {
+        ensureRawAddress(rawAddr)
+      } catch {
+        error.value = 'Please use a wallet with a raw address (0x...). ENS names are not supported on Base.'
+        isConnected.value = false
+        return
+      }
+      address.value = rawAddr
       isConnected.value = true
 
-      const addr = result.accounts[0].toLowerCase()
+      const addr = rawAddr.toLowerCase()
       if (!allowedList.includes(addr)) {
         error.value = allowedList.length === 1
           ? `Your address is not whitelisted. Only ${allowedAddress} is allowed.`
@@ -167,9 +175,15 @@ onMounted(async () => {
   if (typeof window === 'undefined') return
   const account = getAccount(wagmiConfig)
   if (account.isConnected && account.address) {
-    address.value = account.address
-    isConnected.value = true
-    await checkAuth()
+    try {
+      ensureRawAddress(account.address)
+      address.value = account.address
+      isConnected.value = true
+      await checkAuth()
+    } catch {
+      error.value = 'Please use a wallet with a raw address (0x...). ENS names are not supported on Base.'
+      isConnected.value = false
+    }
   }
 })
 </script>

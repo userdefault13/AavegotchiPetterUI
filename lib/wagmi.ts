@@ -1,6 +1,24 @@
 import { createConfig, http, injected } from '@wagmi/core'
 import { base } from '@wagmi/core/chains'
 
+/** Ensures address is a raw 0x address. Rejects ENS names (Base ENS resolution fails). */
+export function ensureRawAddress(value: string): `0x${string}` {
+  const trimmed = value?.trim() || ''
+  if (!trimmed.startsWith('0x') || trimmed.length !== 42) {
+    throw new Error('Invalid address. Use a raw wallet address (0x...). ENS names are not supported on Base.')
+  }
+  if (trimmed.includes('.')) {
+    throw new Error('Please use a raw wallet address (0x...). ENS names are not supported on Base.')
+  }
+  return trimmed as `0x${string}`
+}
+
+/** Shortens address for display. */
+export function shortenAddress(addr: string): string {
+  if (!addr || addr.length < 10) return addr
+  return `${addr.slice(0, 6)}...${addr.slice(-4)}`
+}
+
 export const metaMaskConnector = injected({ target: 'metaMask' })
 export const coinbaseConnector = injected({ target: 'coinbaseWallet' })
 
