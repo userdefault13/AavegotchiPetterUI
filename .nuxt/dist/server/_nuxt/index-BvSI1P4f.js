@@ -132,7 +132,7 @@ _sfc_main$4.setup = (props, ctx) => {
 function useDelegationStatus() {
   var _a;
   const config = useRuntimeConfig();
-  const petterAddress = ((_a = config.public) == null ? void 0 : _a.petterAddress) || "0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF";
+  const petterAddress = ((_a = config.public) == null ? void 0 : _a.petterAddress) || "0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF";
   const status = ref(null);
   const loading = ref(true);
   const fetchStatus = async () => {

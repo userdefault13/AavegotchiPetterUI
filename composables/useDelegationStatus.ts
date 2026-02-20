@@ -17,7 +17,7 @@ export interface DelegationStatus {
 
 export function useDelegationStatus() {
   const config = useRuntimeConfig()
-  const petterAddress = (config.public?.petterAddress as string) || '0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF'
+  const petterAddress = (config.public?.petterAddress as string) || '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF'
 
   const status: Ref<DelegationStatus | null> = ref(null)
   const loading = ref(true)
