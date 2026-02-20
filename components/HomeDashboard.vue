@@ -81,13 +81,12 @@
               <p class="text-slate-400 text-sm">Address</p>
               <p class="font-mono text-sm break-all mt-1">{{ petterAddress || '—' }}</p>
             </div>
-            <div v-if="balanceAddress && balanceAddress.toLowerCase() !== (petterAddress || '').toLowerCase()">
-              <p class="text-slate-400 text-sm">Balance from (delegate)</p>
-              <p class="font-mono text-sm break-all mt-1">{{ balanceAddress }}</p>
-            </div>
             <div>
               <p class="text-slate-400 text-sm">Balance (ETH)</p>
               <p class="font-mono text-lg font-bold mt-1">{{ petterBalance ?? '—' }}</p>
+              <p v-if="petterBalanceAddress" class="text-slate-500 text-xs mt-0.5">
+                from {{ petterBalanceAddress.slice(0, 10) }}...{{ petterBalanceAddress.slice(-8) }}
+              </p>
             </div>
             <div>
               <p class="text-slate-400 text-sm">Gotchis Delegated</p>
@@ -270,9 +269,6 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { disconnect } from '@wagmi/core'
 import { wagmiConfig } from '~/lib/wagmi'
-import { formatEther } from 'viem'
-import { createPublicClient, http } from 'viem'
-import { base } from 'viem/chains'
 
 interface HealthData {
   status: string
@@ -293,12 +289,8 @@ type ExecutionEntry =
 const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
 const { status: delegationStatus, fetchStatus: fetchDelegation, petterAddress } = useDelegationStatus()
-const balanceAddress = computed(() => {
-  const config = useRuntimeConfig()
-  const addr = (config.public?.petterBalanceAddress as string) || ''
-  return addr.trim() || petterAddress
-})
 const petterBalance = ref<string | null>(null)
+const petterBalanceAddress = ref<string | null>(null)
 const balanceRefreshing = ref(false)
 const totalGotchisDelegated = ref<number | null>(null)
 const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
@@ -467,20 +459,14 @@ const runTestMode = async (durationSec: number) => {
 
 
 const fetchPetterBalance = async () => {
-  const addr = balanceAddress.value
-  if (!addr) return
   balanceRefreshing.value = true
   try {
-    const config = useRuntimeConfig()
-    const rpcUrl = (config.public?.baseRpcUrl as string) || 'https://mainnet.base.org'
-    const client = createPublicClient({
-      chain: base,
-      transport: http(rpcUrl),
-    })
-    const balance = await client.getBalance({ address: addr as `0x${string}` })
-    petterBalance.value = parseFloat(formatEther(balance)).toFixed(4)
+    const res = await $fetch<{ balance: string; balanceAddress: string | null }>('/api/petter-balance')
+    petterBalance.value = res.balance
+    petterBalanceAddress.value = res.balanceAddress
   } catch (err) {
     petterBalance.value = '—'
+    petterBalanceAddress.value = null
   } finally {
     balanceRefreshing.value = false
   }

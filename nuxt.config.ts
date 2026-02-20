@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     })(),
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
     workerUrl: process.env.WORKER_URL,
+    petterBalanceAddress: process.env.PETTER_BALANCE_ADDRESS || '',
     public: {
       allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
       allowedAddresses: process.env.ALLOWED_ADDRESSES,
