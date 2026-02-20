@@ -156,6 +156,12 @@ export async function removeDelegatedOwner(owner: string): Promise<void> {
   }
 }
 
+export async function clearAllDelegatedOwners(): Promise<number> {
+  const owners = await getDelegatedOwners()
+  await kv.set('delegated:owners', [])
+  return owners.length
+}
+
 export async function isDelegatedOwner(owner: string): Promise<boolean> {
   if (!owner || typeof owner !== 'string') return false
   const owners = await getDelegatedOwners()

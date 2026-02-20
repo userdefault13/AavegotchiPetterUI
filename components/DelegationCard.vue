@@ -64,6 +64,33 @@
             >
               {{ revoking ? 'Revoking...' : 'Revoke & Change Petter' }}
             </button>
+            <div class="mt-2 pt-2 border-t border-white/10">
+              <p class="text-slate-400 text-xs mb-1">Revoke a different petter address:</p>
+              <div class="flex flex-wrap gap-2 items-center">
+                <button
+                  type="button"
+                  @click="confirmRevoke('0x6cSFC27F465ac73466D3A10508d2ED8a68364bBF')"
+                  :disabled="revoking"
+                  class="px-3 py-1.5 bg-red-600/60 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50"
+                >
+                  Revoke 0xB4C1...e15
+                </button>
+                <input
+                  v-model="revokeAddress"
+                  type="text"
+                  placeholder="0x..."
+                  class="flex-1 min-w-[140px] bg-white/10 border border-white/20 rounded px-3 py-1.5 text-sm font-mono placeholder-slate-500"
+                />
+                <button
+                  type="button"
+                  @click="revokeSpecificAddress"
+                  :disabled="revoking || !revokeAddress"
+                  class="px-3 py-1.5 bg-red-600/60 text-white rounded text-sm hover:bg-red-600 disabled:opacity-50"
+                >
+                  Revoke
+                </button>
+              </div>
+            </div>
           </template>
         </div>
       </div>
@@ -87,6 +114,7 @@ interface DelegationStatus {
 
 const status = ref<DelegationStatus | null>(null)
 const petterAddress = ref('')
+const revokeAddress = ref('')
 const loading = ref(true)
 const approving = ref(false)
 const registering = ref(false)
@@ -147,6 +175,25 @@ const register = async () => {
 const revokeDelegation = async () => {
   if (!petterAddress.value) return
   if (!confirm('Revoke the current petter? You will need to approve again after updating the petter address.')) return
+  await doRevoke(petterAddress.value)
+}
+
+const confirmRevoke = (addr: string) => {
+  if (!confirm(`Revoke ${addr} as petter for your gotchis?`)) return
+  doRevoke(addr)
+}
+
+const revokeSpecificAddress = async () => {
+  const addr = revokeAddress.value?.trim()
+  if (!addr || !addr.startsWith('0x')) {
+    alert('Enter a valid address (0x...)')
+    return
+  }
+  confirmRevoke(addr)
+  revokeAddress.value = ''
+}
+
+const doRevoke = async (addr: string) => {
   revoking.value = true
   try {
     const walletClient = await getWalletClient(wagmiConfig)
@@ -158,12 +205,14 @@ const revokeDelegation = async () => {
       address: AAVEGOTCHI_DIAMOND_ADDRESS,
       abi: AAVEGOTCHI_FACET_ABI,
       functionName: 'setPetOperatorForAll',
-      args: [petterAddress.value as `0x${string}`, false],
+      args: [addr as `0x${string}`, false],
       chainId: base.id,
     })
-    await $fetch('/api/delegation/unregister', { method: 'POST' })
+    if (addr.toLowerCase() === petterAddress.value?.toLowerCase()) {
+      await $fetch('/api/delegation/unregister', { method: 'POST' })
+    }
     await fetchStatus()
-    alert('Revoked. Update PETTER_ADDRESS in your env, then approve the new petter.')
+    alert('Revoked successfully.')
   } catch (err: any) {
     console.error('Revoke failed:', err)
     alert(err?.message || 'Revoke failed')

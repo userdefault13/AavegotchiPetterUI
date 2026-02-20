@@ -21,9 +21,18 @@
       </div>
 
       <div v-else class="space-y-4">
-        <div class="flex justify-between text-sm text-slate-400 mb-2">
+        <div class="flex flex-wrap items-center justify-between gap-2 text-sm text-slate-400 mb-2">
           <span>Total: {{ owners.length }} owner(s)</span>
           <span class="font-semibold text-white">{{ totalGotchis }} Aavegotchis to pet</span>
+          <button
+            v-if="owners.length > 0"
+            type="button"
+            @click="unregisterAll"
+            :disabled="clearing"
+            class="px-3 py-1.5 text-sm bg-red-600/80 hover:bg-red-600 text-white rounded-lg transition disabled:opacity-50"
+          >
+            {{ clearing ? 'Clearing...' : 'Unregister all' }}
+          </button>
         </div>
         <div class="space-y-2 max-h-64 overflow-y-auto">
           <div
@@ -60,6 +69,23 @@ interface DelegationOwner {
 const owners = ref<DelegationOwner[]>([])
 const totalGotchis = ref(0)
 const loading = ref(false)
+const clearing = ref(false)
+
+const unregisterAll = async () => {
+  if (!confirm('Unregister all delegates? The worker will stop petting for them. Each owner should revoke on-chain.')) return
+  clearing.value = true
+  try {
+    const res = await $fetch<{ success: boolean; message: string; count: number }>('/api/delegation/clear-all', {
+      method: 'POST',
+    })
+    alert(res.message)
+    await fetchOwners()
+  } catch (err: any) {
+    alert(err?.data?.message || err?.message || 'Failed to unregister all')
+  } finally {
+    clearing.value = false
+  }
+}
 
 const fetchOwners = async () => {
   loading.value = true
