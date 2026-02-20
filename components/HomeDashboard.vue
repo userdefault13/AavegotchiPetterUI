@@ -66,7 +66,16 @@
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6">
         <!-- Petter Wallet Info -->
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
-          <h2 class="text-lg font-semibold mb-4">Petter Wallet</h2>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-semibold">Petter Wallet</h2>
+            <button
+              @click="fetchPetterBalance"
+              :disabled="balanceRefreshing"
+              class="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition disabled:opacity-50"
+            >
+              {{ balanceRefreshing ? '...' : 'Refresh' }}
+            </button>
+          </div>
           <div class="space-y-3">
             <div>
               <p class="text-slate-400 text-sm">Address</p>
@@ -281,6 +290,7 @@ const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
 const { status: delegationStatus, fetchStatus: fetchDelegation, petterAddress } = useDelegationStatus()
 const petterBalance = ref<string | null>(null)
+const balanceRefreshing = ref(false)
 const totalGotchisDelegated = ref<number | null>(null)
 const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
 const pettingIntervalHours = ref(12)
@@ -450,15 +460,20 @@ const runTestMode = async (durationSec: number) => {
 const fetchPetterBalance = async () => {
   const addr = petterAddress
   if (!addr) return
+  balanceRefreshing.value = true
   try {
+    const config = useRuntimeConfig()
+    const rpcUrl = (config.public?.baseRpcUrl as string) || 'https://mainnet.base.org'
     const client = createPublicClient({
       chain: base,
-      transport: http(),
+      transport: http(rpcUrl),
     })
     const balance = await client.getBalance({ address: addr as `0x${string}` })
     petterBalance.value = parseFloat(formatEther(balance)).toFixed(4)
   } catch (err) {
     petterBalance.value = '—'
+  } finally {
+    balanceRefreshing.value = false
   }
 }
 

@@ -35,7 +35,7 @@ export default defineNuxtConfig({
     reportSecret: process.env.REPORT_SECRET,
     petterAddress: (() => {
       const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF'
-      const deprecated = ['0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF']
+      const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
       return deprecated.includes((addr || '').toLowerCase()) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
     })(),
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
@@ -43,10 +43,11 @@ export default defineNuxtConfig({
     public: {
       allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
       allowedAddresses: process.env.ALLOWED_ADDRESSES,
+      baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
       petterAddress: (() => {
         const addr = process.env.PETTER_ADDRESS || process.env.WALLET_ADDRESS || '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF'
-        const deprecated = ['0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF']
-        return deprecated.includes(addr) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
+        const deprecated = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
+        return deprecated.includes((addr || '').toLowerCase()) ? '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' : addr
       })(),
     },
   },

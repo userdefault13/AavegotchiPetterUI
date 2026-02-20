@@ -16,7 +16,7 @@ export interface DelegationStatus {
 }
 
 const CORRECT_PETTER_ADDRESS = '0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF' as const
-const DEPRECATED_PETTER_ADDRESSES = ['0x6c5FC27F465ac73466D3A10508d2ED8a68364bBF']
+const DEPRECATED_PETTER_ADDRESSES = ['0xb4c123857ea7d2f1343d749818c19af439c65e15']
 
 export function useDelegationStatus() {
   const config = useRuntimeConfig()
