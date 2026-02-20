@@ -64,21 +64,21 @@
 
       <!-- Wallet & Auth Section -->
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6">
-        <!-- Wallet Info -->
+        <!-- Petter Wallet Info -->
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
-          <h2 class="text-lg font-semibold mb-4">Wallet</h2>
+          <h2 class="text-lg font-semibold mb-4">Petter Wallet</h2>
           <div class="space-y-3">
             <div>
               <p class="text-slate-400 text-sm">Address</p>
-              <p class="font-mono text-sm break-all mt-1">{{ walletAddress || '—' }}</p>
+              <p class="font-mono text-sm break-all mt-1">{{ petterAddress || '—' }}</p>
             </div>
             <div>
               <p class="text-slate-400 text-sm">Balance (ETH)</p>
-              <p class="font-mono text-lg font-bold mt-1">{{ walletBalance ?? '—' }}</p>
+              <p class="font-mono text-lg font-bold mt-1">{{ petterBalance ?? '—' }}</p>
             </div>
             <div>
               <p class="text-slate-400 text-sm">Gotchis Delegated</p>
-              <p class="font-mono text-lg font-bold mt-1">{{ delegationStatus?.gotchiCount ?? '—' }}</p>
+              <p class="font-mono text-lg font-bold mt-1">{{ totalGotchisDelegated ?? '—' }}</p>
             </div>
           </div>
         </div>
@@ -279,8 +279,9 @@ type ExecutionEntry =
 
 const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
-const { status: delegationStatus, fetchStatus: fetchDelegation } = useDelegationStatus()
-const walletBalance = ref<string | null>(null)
+const { status: delegationStatus, fetchStatus: fetchDelegation, petterAddress } = useDelegationStatus()
+const petterBalance = ref<string | null>(null)
+const totalGotchisDelegated = ref<number | null>(null)
 const workerLogs = ref<{ timestamp: number; level: string; message: string }[]>([])
 const pettingIntervalHours = ref(12)
 const frequencySaving = ref(false)
@@ -314,8 +315,6 @@ const nextPetTimer = computed(() => {
   const m = Math.floor((diff % 3600000) / 60000)
   return `${h}h ${m}m`
 })
-
-const walletAddress = ref<string | null>(null)
 
 const hourOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 
@@ -448,17 +447,8 @@ const runTestMode = async (durationSec: number) => {
 }
 
 
-const fetchMe = async () => {
-  try {
-    const res = await $fetch<{ address: string | null }>('/api/auth/me')
-    walletAddress.value = res.address
-  } catch {
-    walletAddress.value = null
-  }
-}
-
-const fetchBalance = async () => {
-  const addr = walletAddress.value
+const fetchPetterBalance = async () => {
+  const addr = petterAddress
   if (!addr) return
   try {
     const client = createPublicClient({
@@ -466,9 +456,20 @@ const fetchBalance = async () => {
       transport: http(),
     })
     const balance = await client.getBalance({ address: addr as `0x${string}` })
-    walletBalance.value = parseFloat(formatEther(balance)).toFixed(4)
+    petterBalance.value = parseFloat(formatEther(balance)).toFixed(4)
   } catch (err) {
-    walletBalance.value = '—'
+    petterBalance.value = '—'
+  }
+}
+
+const fetchDelegationOwners = async () => {
+  try {
+    const res = await $fetch<{ owners: { address: string; gotchiCount: number }[]; totalGotchis: number }>(
+      '/api/delegation/owners'
+    )
+    totalGotchisDelegated.value = res.totalGotchis ?? 0
+  } catch {
+    totalGotchisDelegated.value = null
   }
 }
 
@@ -516,14 +517,27 @@ onMounted(async () => {
   await checkAuth()
   await fetchHealth()
   if (isAuthenticated.value) {
-    await fetchMe()
-    await Promise.all([fetchHistory(), fetchDelegation(), fetchBalance(), fetchWorkerLogs(), fetchFrequency()])
+    await Promise.all([
+      fetchHistory(),
+      fetchDelegation(),
+      fetchPetterBalance(),
+      fetchDelegationOwners(),
+      fetchWorkerLogs(),
+      fetchFrequency(),
+    ])
   }
   loading.value = false
   setInterval(fetchHealth, 30000)
   if (isAuthenticated.value) {
     setInterval(
-      () => Promise.all([fetchMe(), fetchHistory(), fetchBalance(), fetchWorkerLogs(), fetchFrequency()]),
+      () =>
+        Promise.all([
+          fetchHistory(),
+          fetchPetterBalance(),
+          fetchDelegationOwners(),
+          fetchWorkerLogs(),
+          fetchFrequency(),
+        ]),
       60000
     )
   }
