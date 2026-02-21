@@ -183,7 +183,7 @@
       </div>
 
       <!-- Manual Pet -->
-      <div v-if="isAuthenticated && workerEnabled" class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
+      <div v-if="isAuthenticated" class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
         <h2 class="text-lg font-semibold mb-2">Manual Pet</h2>
         <p class="text-slate-400 text-sm mb-4">
           Trigger a petting run now for all delegated gotchis. Skips the 12h cooldown. Use this to test the petter.
@@ -418,7 +418,9 @@ const manualPet = async () => {
     })
     const msg = res?.result?.message
     alert(msg || 'Petting completed!')
-    await Promise.all([fetchHistory(), fetchHealth(), fetchWorkerLogs()])
+    await fetchHistory()
+    await fetchHealth()
+    if (workerEnabled.value) await fetchWorkerLogs()
   } catch (err: unknown) {
     console.error('Manual pet failed:', err)
     const msg =
@@ -562,9 +564,12 @@ const logout = async () => {
   try {
     await $fetch('/api/auth/logout', { method: 'POST' })
     await disconnect(wagmiConfig)
-    await navigateTo('/')
+    isAuthenticated.value = false
+    window.location.href = '/'
   } catch (err) {
     console.error('Failed to logout:', err)
+    isAuthenticated.value = false
+    window.location.href = '/'
   }
 }
 
