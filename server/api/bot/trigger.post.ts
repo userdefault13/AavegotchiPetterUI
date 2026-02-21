@@ -1,5 +1,11 @@
+/**
+ * POST /api/bot/trigger
+ * Manual trigger - calls runPetting directly (Option B: Vercel serverless).
+ * Requires auth (dashboard session). Force=true skips 12h cooldown.
+ */
 import { checkAuth } from '~/lib/auth'
 import { addManualTriggerLog } from '~/lib/kv'
+import { runPetting } from '~/lib/pet'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
@@ -10,68 +16,42 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  const workerUrl = config.workerUrl || process.env.WORKER_URL
+  const privateKey = config.petterPrivateKey || process.env.PETTER_PRIVATE_KEY
+  const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D'
+  const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
 
-  if (!workerUrl) {
+  if (!privateKey || !privateKey.startsWith('0x')) {
     throw createError({
       statusCode: 500,
-      message: 'Worker URL not configured. Set WORKER_URL to enable manual trigger.',
+      message: 'PETTER_PRIVATE_KEY not configured. Set in Vercel env vars to enable manual trigger.',
     })
   }
 
   try {
-    const baseUrl = workerUrl.replace(/\/$/, '')
     let body: { force?: boolean } = {}
     try {
       body = (await readBody(event)) as { force?: boolean }
     } catch {
       /* empty body ok */
     }
-    // Manual trigger always forces: batch pet all gotchis immediately, skip 12h cooldown
-    const response = await fetch(`${baseUrl}/run`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ force: body.force !== false }),
+
+    const result = await runPetting({
+      force: body?.force !== false,
+      privateKey,
+      petterAddress,
+      baseRpcUrl,
     })
 
-    const text = await response.text()
-
-    if (!response.ok) {
-      let message = 'Failed to trigger worker'
-      try {
-        const json = JSON.parse(text)
-        if (json?.error) message = json.error
-      } catch {
-        if (text?.trim().startsWith('<')) {
-          message =
-            'Cloudflare Worker error. Check Workers logs and ensure secrets (PRIVATE_KEY, WALLET_ADDRESS, BASE_RPC_URL, DASHBOARD_URL, REPORT_SECRET) are set via wrangler secret put.'
-        } else if (text) {
-          message = text.slice(0, 500)
-        }
-      }
-      throw createError({
-        statusCode: 500,
-        message,
-      })
-    }
-
-    const result = text ? JSON.parse(text) : {}
     await addManualTriggerLog({
       id: `manual-${Date.now()}`,
       timestamp: Date.now(),
       message: result.message || 'Manual trigger completed',
       petted: result.petted,
     })
+
     return { success: true, result }
   } catch (error: any) {
     const msg = error.message || 'Failed to trigger bot'
-    // Surface connection/network errors more clearly
-    if (msg.includes('fetch') || msg.includes('ECONNREFUSED') || msg.includes('ENOTFOUND')) {
-      throw createError({
-        statusCode: 500,
-        message: `Cannot reach worker: ${msg}. Check WORKER_URL is set and the Cloudflare Worker is deployed.`,
-      })
-    }
     throw createError({
       statusCode: 500,
       message: msg,

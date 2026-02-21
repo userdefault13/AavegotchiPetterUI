@@ -1,9 +1,9 @@
 import { getHeader } from 'h3'
-import { getPettingIntervalHours } from '~/lib/kv'
+import { getPettingIntervalHours, getBotState } from '~/lib/kv'
 
 /**
- * Returns the dashboard's Base RPC URL and petting interval for the worker to use.
- * Ensures worker and dashboard use the same RPC (dashboard shows 22 gotchis, worker should too).
+ * Returns the dashboard's Base RPC URL, petting interval, and running status for the worker.
+ * Worker must respect running=false (bot stopped) and skip petting.
  */
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig()
@@ -26,5 +26,6 @@ export default defineEventHandler(async (event) => {
 
   const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
   const pettingIntervalHours = await getPettingIntervalHours()
-  return { baseRpcUrl, pettingIntervalHours }
+  const botState = await getBotState()
+  return { baseRpcUrl, pettingIntervalHours, running: botState?.running ?? false }
 })

@@ -175,12 +175,12 @@
 
       <!-- Bot Control & Delegation -->
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6 mt-6">
-        <BotControl @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
+        <BotControl v-if="workerEnabled" @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
         <DelegationCard />
       </div>
 
       <!-- Petting Frequency -->
-      <div v-if="isAuthenticated" class="mt-6">
+      <div v-if="isAuthenticated && workerEnabled" class="mt-6">
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
           <h2 class="text-lg font-semibold mb-4">Petting Frequency</h2>
           <p class="text-slate-400 text-sm mb-4">
@@ -223,7 +223,7 @@
       </div>
 
       <!-- Worker Logs -->
-      <div v-if="isAuthenticated" class="mt-6">
+      <div v-if="isAuthenticated && workerEnabled" class="mt-6">
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
           <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold">Worker Logs</h2>
@@ -286,6 +286,8 @@ type ExecutionEntry =
   | { type: 'transaction'; hash: string; timestamp: number; blockNumber: number; gasUsed: string; gasCostWei?: string; tokenIds: string[] }
   | { type: 'manual'; id: string; timestamp: number; message: string; petted?: number }
 
+const config = useRuntimeConfig()
+const workerEnabled = computed(() => config.public.workerEnabled === true)
 const health = ref<HealthData | null>(null)
 const history = ref<ExecutionEntry[]>([])
 const { status: delegationStatus, fetchStatus: fetchDelegation, petterAddress } = useDelegationStatus()
@@ -527,27 +529,28 @@ onMounted(async () => {
   await checkAuth()
   await fetchHealth()
   if (isAuthenticated.value) {
-    await Promise.all([
+    const tasks = [
       fetchHistory(),
       fetchDelegation(),
       fetchPetterBalance(),
       fetchDelegationOwners(),
-      fetchWorkerLogs(),
-      fetchFrequency(),
-    ])
+    ]
+    if (workerEnabled.value) {
+      tasks.push(fetchWorkerLogs(), fetchFrequency())
+    }
+    await Promise.all(tasks)
   }
   loading.value = false
   setInterval(fetchHealth, 30000)
   if (isAuthenticated.value) {
     setInterval(
-      () =>
-        Promise.all([
-          fetchHistory(),
-          fetchPetterBalance(),
-          fetchDelegationOwners(),
-          fetchWorkerLogs(),
-          fetchFrequency(),
-        ]),
+      () => {
+        const tasks = [fetchHistory(), fetchPetterBalance(), fetchDelegationOwners()]
+        if (workerEnabled.value) {
+          tasks.push(fetchWorkerLogs(), fetchFrequency())
+        }
+        return Promise.all(tasks)
+      },
       60000
     )
   }

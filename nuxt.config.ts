@@ -6,6 +6,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   nitro: {
     preset: 'vercel',
+    vercel: {
+      functions: {
+        maxDuration: 60,
+      },
+    },
   },
   modules: [
     '@nuxtjs/tailwindcss',
@@ -39,7 +44,10 @@ export default defineNuxtConfig({
       return deprecated.includes((addr || '').toLowerCase()) ? '0xb5E8181aE736E022E806e3aAE40F4E34dC49455D' : addr
     })(),
     baseRpcUrl: process.env.BASE_RPC_URL || 'https://mainnet.base.org',
-    workerUrl: process.env.WORKER_URL,
+    petterPrivateKey: process.env.PETTER_PRIVATE_KEY || '',
+    workerUrl: process.env.WORKER_URL || '',
+    /** Show Bot Control when petting is available (PETTER_PRIVATE_KEY set). Option B uses serverless, not worker. */
+    workerEnabled: !!(process.env.PETTER_PRIVATE_KEY && process.env.PETTER_PRIVATE_KEY.trim()),
     petterBalanceAddress: process.env.PETTER_BALANCE_ADDRESS || '',
     public: {
       allowedAddress: process.env.ALLOWED_ADDRESS || '0x2127aa7265d573aa467f1d73554d17890b872e76',
@@ -52,6 +60,8 @@ export default defineNuxtConfig({
       })(),
       /** Optional: address to fetch balance from (e.g. EIP-7702 delegate). If set, Balance (ETH) shows this address's balance. */
       petterBalanceAddress: process.env.PETTER_BALANCE_ADDRESS || '',
+      /** Show Bot Control when PETTER_PRIVATE_KEY is set (Option B: serverless petting). */
+      workerEnabled: !!(process.env.PETTER_PRIVATE_KEY && process.env.PETTER_PRIVATE_KEY.trim()),
     },
   },
 })

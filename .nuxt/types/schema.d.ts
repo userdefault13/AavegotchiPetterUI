@@ -91,7 +91,13 @@ declare module 'nuxt/schema' {
 
    baseRpcUrl: string,
 
+   petterPrivateKey: string,
+
    workerUrl: string,
+
+   workerEnabled: boolean,
+
+   petterBalanceAddress: string,
 
    nitro: {
       envPrefix: string,
@@ -102,7 +108,13 @@ declare module 'nuxt/schema' {
 
    allowedAddresses: string,
 
+   baseRpcUrl: string,
+
    petterAddress: string,
+
+   petterBalanceAddress: string,
+
+   workerEnabled: boolean,
   }
 }
 declare module 'vue' {

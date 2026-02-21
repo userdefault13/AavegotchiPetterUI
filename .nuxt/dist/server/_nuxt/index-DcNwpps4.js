@@ -129,10 +129,15 @@ _sfc_main$4.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/BotControl.vue");
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
+const CORRECT_PETTER_ADDRESS = "0xb5E8181aE736E022E806e3aAE40F4E34dC49455D";
+const DEPRECATED_PETTER_ADDRESSES = ["0xb4c123857ea7d2f1343d749818c19af439c65e15", "0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf"];
 function useDelegationStatus() {
   var _a;
   const config = useRuntimeConfig();
-  const petterAddress = ((_a = config.public) == null ? void 0 : _a.petterAddress) || "0xb5E8181aE736E022E806e3aAE40F4E34dC49455D";
+  let petterAddress = ((_a = config.public) == null ? void 0 : _a.petterAddress) || CORRECT_PETTER_ADDRESS;
+  if (DEPRECATED_PETTER_ADDRESSES.includes(petterAddress.toLowerCase())) {
+    petterAddress = CORRECT_PETTER_ADDRESS;
+  }
   const status = ref(null);
   const loading = ref(true);
   const fetchStatus = async () => {
@@ -232,10 +237,15 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
   __name: "HomeDashboard",
   __ssrInlineRender: true,
   setup(__props) {
+    const config = useRuntimeConfig();
+    const workerEnabled = computed(() => config.public.workerEnabled === true);
     const health = ref(null);
     const history = ref([]);
-    const { status: delegationStatus } = useDelegationStatus();
-    const walletBalance = ref(null);
+    const { petterAddress } = useDelegationStatus();
+    const petterBalance = ref(null);
+    const petterBalanceAddress = ref(null);
+    const balanceRefreshing = ref(false);
+    const totalGotchisDelegated = ref(null);
     const workerLogs = ref([]);
     const pettingIntervalHours = ref(12);
     const frequencySaving = ref(false);
@@ -272,7 +282,6 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       const m = Math.floor(diff % 36e5 / 6e4);
       return `${h}h ${m}m`;
     });
-    const walletAddress = ref(null);
     const hourOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
     const pettingIntervalLabel = computed(() => {
       const h = pettingIntervalHours.value;
@@ -329,7 +338,6 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       return `${eth.toFixed(4)} ETH`;
     };
     return (_ctx, _push, _parent, _attrs) => {
-      var _a;
       const _component_WalletConnect = _sfc_main$5;
       const _component_BotControl = _sfc_main$4;
       const _component_DelegationCard = _sfc_main$3;
@@ -348,7 +356,13 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       }
       _push(`</div></div></div>`);
       if (isAuthenticated.value) {
-        _push(`<div class="grid md:grid-cols-2 gap-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Wallet</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Address</p><p class="font-mono text-sm break-all mt-1">${ssrInterpolate(walletAddress.value || "—")}</p></div><div><p class="text-slate-400 text-sm">Balance (ETH)</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(walletBalance.value ?? "—")}</p></div><div><p class="text-slate-400 text-sm">Gotchis Delegated</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(((_a = unref(delegationStatus)) == null ? void 0 : _a.gotchiCount) ?? "—")}</p></div></div></div><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Bot Status</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Last Run</p><p class="mt-1">${ssrInterpolate(formatDate(status.value.lastRun))}</p></div>`);
+        _push(`<div class="grid md:grid-cols-2 gap-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h2 class="text-lg font-semibold">Petter Wallet</h2><button${ssrIncludeBooleanAttr(balanceRefreshing.value) ? " disabled" : ""} class="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 rounded transition disabled:opacity-50">${ssrInterpolate(balanceRefreshing.value ? "..." : "Refresh")}</button></div><div class="space-y-3"><div><p class="text-slate-400 text-sm">Address</p><p class="font-mono text-sm break-all mt-1">${ssrInterpolate(unref(petterAddress) || "—")}</p></div><div><p class="text-slate-400 text-sm">Balance (ETH)</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(petterBalance.value ?? "—")}</p>`);
+        if (petterBalanceAddress.value) {
+          _push(`<p class="text-slate-500 text-xs mt-0.5"> from ${ssrInterpolate(petterBalanceAddress.value.slice(0, 10))}...${ssrInterpolate(petterBalanceAddress.value.slice(-8))}</p>`);
+        } else {
+          _push(`<!---->`);
+        }
+        _push(`</div><div><p class="text-slate-400 text-sm">Gotchis Delegated</p><p class="font-mono text-lg font-bold mt-1">${ssrInterpolate(totalGotchisDelegated.value ?? "—")}</p></div></div></div><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Bot Status</h2><div class="space-y-3"><div><p class="text-slate-400 text-sm">Last Run</p><p class="mt-1">${ssrInterpolate(formatDate(status.value.lastRun))}</p></div>`);
         if (status.value.lastRunMessage && !status.value.lastError) {
           _push(`<div><p class="text-slate-400 text-sm">Last Outcome</p><p class="text-slate-300 text-sm mt-1">${ssrInterpolate(status.value.lastRunMessage)}</p></div>`);
         } else {
@@ -398,18 +412,22 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       _push(`</div>`);
       if (isAuthenticated.value) {
         _push(`<div class="grid md:grid-cols-2 gap-6 mt-6">`);
-        _push(ssrRenderComponent(_component_BotControl, {
-          onTriggered: () => {
-            fetchHistory();
-            fetchWorkerLogs();
-          }
-        }, null, _parent));
+        if (workerEnabled.value) {
+          _push(ssrRenderComponent(_component_BotControl, {
+            onTriggered: () => {
+              fetchHistory();
+              fetchWorkerLogs();
+            }
+          }, null, _parent));
+        } else {
+          _push(`<!---->`);
+        }
         _push(ssrRenderComponent(_component_DelegationCard, null, null, _parent));
         _push(`</div>`);
       } else {
         _push(`<!---->`);
       }
-      if (isAuthenticated.value) {
+      if (isAuthenticated.value && workerEnabled.value) {
         _push(`<div class="mt-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><h2 class="text-lg font-semibold mb-4">Petting Frequency</h2><p class="text-slate-400 text-sm mb-4"> How often the bot checks and pets your Aavegotchis. Gotchis need petting at least every 12 hours for kinship. </p><div class="flex flex-wrap items-center gap-4"><label class="flex items-center gap-2"><span class="text-slate-300 text-sm">Interval:</span><select${ssrRenderAttr("value", pettingIntervalHours.value)}${ssrIncludeBooleanAttr(frequencySaving.value) ? " disabled" : ""} class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"><!--[-->`);
         ssrRenderList(hourOptions, (h) => {
           _push(`<option${ssrRenderAttr("value", h)}> Every ${ssrInterpolate(h)} ${ssrInterpolate(h === 1 ? "hour" : "hours")}</option>`);
@@ -436,7 +454,7 @@ const _sfc_main$1 = /* @__PURE__ */ defineComponent({
       } else {
         _push(`<!---->`);
       }
-      if (isAuthenticated.value) {
+      if (isAuthenticated.value && workerEnabled.value) {
         _push(`<div class="mt-6"><div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6"><div class="flex items-center justify-between mb-4"><h2 class="text-lg font-semibold">Worker Logs</h2><button${ssrIncludeBooleanAttr(workerLogsLoading.value) ? " disabled" : ""} class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition disabled:opacity-50">${ssrInterpolate(workerLogsLoading.value ? "Loading..." : "Refresh")}</button></div>`);
         if (workerLogsLoading.value && workerLogs.value.length === 0) {
           _push(`<div class="text-center py-8 text-slate-400"><p>Loading worker logs...</p></div>`);
@@ -486,4 +504,4 @@ _sfc_main.setup = (props, ctx) => {
 export {
   _sfc_main as default
 };
-//# sourceMappingURL=index-BvSI1P4f.js.map
+//# sourceMappingURL=index-DcNwpps4.js.map

@@ -28,6 +28,9 @@ declare module "nitropack/types" {
     '/api/bot/report': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/report.post').default>>>>
     }
+    '/api/bot/run': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/run.post').default>>>>
+    }
     '/api/bot/start': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/start.post').default>>>>
     }
@@ -66,6 +69,9 @@ declare module "nitropack/types" {
     }
     '/api/health': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/health.get').default>>>>
+    }
+    '/api/petter-balance': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/petter-balance.get').default>>>>
     }
     '/api/stats': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/stats.get').default>>>>

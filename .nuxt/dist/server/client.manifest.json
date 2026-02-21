@@ -1,17 +1,32 @@
 {
-  "_C87zXR28.js": {
+  "_BakZCnjD.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C87zXR28.js",
+    "file": "BakZCnjD.js",
     "name": "index",
     "isDynamicEntry": true,
     "imports": [
       "node_modules/nuxt/dist/app/entry.js"
     ],
     "dynamicImports": [
-      "node_modules/viem/_esm/utils/ccip.js"
+      "node_modules/viem/_esm/utils/ccip.js",
+      "node_modules/@noble/curves/esm/secp256k1.js"
+    ]
+  },
+  "node_modules/@noble/curves/esm/secp256k1.js": {
+    "resourceType": "script",
+    "module": true,
+    "prefetch": true,
+    "preload": true,
+    "file": "COZhajwa.js",
+    "name": "secp256k1",
+    "src": "node_modules/@noble/curves/esm/secp256k1.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_BakZCnjD.js",
+      "node_modules/nuxt/dist/app/entry.js"
     ]
   },
   "node_modules/nuxt/dist/app/components/error-404.vue": {
@@ -19,7 +34,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "yljgxSAy.js",
+    "file": "DZPhy8S-.js",
     "name": "error-404",
     "src": "node_modules/nuxt/dist/app/components/error-404.vue",
     "isDynamicEntry": true,
@@ -39,7 +54,7 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "BYXAXP6k.js",
+    "file": "DspriJd8.js",
     "name": "error-500",
     "src": "node_modules/nuxt/dist/app/components/error-500.vue",
     "isDynamicEntry": true,
@@ -59,12 +74,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "C6U2NV7D.js",
+    "file": "BuNm8C4v.js",
     "name": "entry",
     "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
     "dynamicImports": [
-      "_C87zXR28.js",
+      "_BakZCnjD.js",
       "node_modules/nuxt/dist/app/components/error-404.vue",
       "node_modules/nuxt/dist/app/components/error-500.vue"
     ],
@@ -75,12 +90,12 @@
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "hBpi3ciK.js",
+    "file": "Cz1q_b56.js",
     "name": "ccip",
     "src": "node_modules/viem/_esm/utils/ccip.js",
     "isDynamicEntry": true,
     "imports": [
-      "_C87zXR28.js",
+      "_BakZCnjD.js",
       "node_modules/nuxt/dist/app/entry.js"
     ]
   }
