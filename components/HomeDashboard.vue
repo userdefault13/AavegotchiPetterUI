@@ -208,7 +208,7 @@
 
       <!-- Bot Control & Delegation -->
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6 mt-6">
-        <BotControl v-if="workerEnabled" @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
+        <BotControl @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
         <DelegationCard />
       </div>
 
