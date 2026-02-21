@@ -129,7 +129,7 @@ _sfc_main$4.setup = (props, ctx) => {
   (ssrContext.modules || (ssrContext.modules = /* @__PURE__ */ new Set())).add("components/BotControl.vue");
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
-const CORRECT_PETTER_ADDRESS = "0xb5E8181aE736E022E806e3aAE40F4E34dC49455D";
+const CORRECT_PETTER_ADDRESS = "0x9a3E95f448f3daB367dd9213D4554444faa272F1";
 const DEPRECATED_PETTER_ADDRESSES = ["0xb4c123857ea7d2f1343d749818c19af439c65e15", "0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf"];
 function useDelegationStatus() {
   var _a;
