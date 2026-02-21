@@ -119,14 +119,23 @@
       <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
         <div class="flex items-center justify-between mb-4">
           <h2 class="text-lg font-semibold">Execution History</h2>
-          <button
-            v-if="isAuthenticated"
-            @click="fetchHistory"
-            :disabled="historyLoading"
-            class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition disabled:opacity-50"
-          >
-            Refresh
-          </button>
+          <div v-if="isAuthenticated" class="flex gap-2">
+            <button
+              v-if="history.length > 0"
+              @click="clearHistory"
+              :disabled="historyClearing"
+              class="px-3 py-1.5 text-sm bg-red-600/80 hover:bg-red-600 text-white rounded-lg transition disabled:opacity-50"
+            >
+              {{ historyClearing ? 'Clearing...' : 'Clear' }}
+            </button>
+            <button
+              @click="fetchHistory"
+              :disabled="historyLoading"
+              class="px-3 py-1.5 bg-white/10 hover:bg-white/20 rounded-lg text-sm transition disabled:opacity-50"
+            >
+              Refresh
+            </button>
+          </div>
         </div>
         <div v-if="!isAuthenticated" class="text-center py-12 text-slate-400">
           <p>Connect wallet to view execution history</p>
@@ -302,6 +311,7 @@ const testModeCountdown = ref<number | null>(null)
 let testModeIntervalId: ReturnType<typeof setInterval> | null = null
 const loading = ref(true)
 const historyLoading = ref(false)
+const historyClearing = ref(false)
 const workerLogsLoading = ref(false)
 const backfillLoading = ref(false)
 const isAuthenticated = ref(false)
@@ -364,6 +374,21 @@ const fetchHistory = async () => {
     console.error('Failed to fetch history:', err)
   } finally {
     historyLoading.value = false
+  }
+}
+
+const clearHistory = async () => {
+  if (!isAuthenticated.value || !confirm('Clear all execution history? This cannot be undone.')) return
+  historyClearing.value = true
+  try {
+    await $fetch('/api/transactions/clear', { method: 'POST' })
+    history.value = []
+    await fetchHealth()
+  } catch (err) {
+    console.error('Failed to clear history:', err)
+    alert('Failed to clear execution history')
+  } finally {
+    historyClearing.value = false
   }
 }
 

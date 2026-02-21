@@ -74,6 +74,11 @@ export async function getTransactions(limit = 50): Promise<Transaction[]> {
   }
 }
 
+/** Clear all transactions (execution history) */
+export async function clearTransactions(): Promise<void> {
+  await kv.del('transactions')
+}
+
 /** Replace the entire transactions list (used for backfilling gas cost) */
 export async function setTransactions(transactions: Transaction[]): Promise<void> {
   await kv.del('transactions')
@@ -107,6 +112,11 @@ export async function getManualTriggerLogs(limit = 50): Promise<ManualTriggerLog
   } catch {
     return []
   }
+}
+
+/** Clear manual trigger logs (execution history) */
+export async function clearManualTriggerLogs(): Promise<void> {
+  await kv.del('manual_triggers')
 }
 
 export async function addError(error: ErrorLog): Promise<void> {
