@@ -203,10 +203,10 @@
         <DelegationCard />
       </div>
 
-      <!-- Petting Frequency -->
-      <div v-if="isAuthenticated && workerEnabled" class="mt-6">
+      <!-- Timer / Petting Frequency -->
+      <div v-if="isAuthenticated" class="mt-6">
         <div class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
-          <h2 class="text-lg font-semibold mb-4">Petting Frequency</h2>
+          <h2 class="text-lg font-semibold mb-4">Petting Timer</h2>
           <p class="text-slate-400 text-sm mb-4">
             How often the bot checks and pets your Aavegotchis. Gotchis need petting at least every 12 hours for kinship.
           </p>
@@ -215,7 +215,7 @@
               <span class="text-slate-300 text-sm">Interval:</span>
               <select
                 :value="pettingIntervalHours"
-                :disabled="frequencySaving"
+                :disabled="frequencySaving || testModeCountdown != null"
                 @change="(e) => setFrequency(Number((e.target as HTMLSelectElement).value))"
                 class="bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"
               >
@@ -229,7 +229,7 @@
               v-if="!testModeCountdown"
               type="button"
               @click="runTestMode(60)"
-              :disabled="frequencySaving"
+              :disabled="frequencySaving || manualPetting"
               class="px-4 py-2 text-sm bg-amber-600/80 hover:bg-amber-600 text-white rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Test (1 min)
@@ -238,6 +238,9 @@
               Reverting in {{ testModeCountdown }}s...
             </span>
           </div>
+          <p class="text-slate-500 text-xs mt-3">
+            Test (1 min): Sets interval to 1 min, triggers a pet now, then reverts to 12h after 60 seconds.
+          </p>
         </div>
       </div>
 
@@ -496,9 +499,10 @@ const setFrequency = async (hours: number) => {
 }
 
 const runTestMode = async (durationSec: number) => {
-  if (!isAuthenticated.value || frequencySaving.value || testModeCountdown.value != null) return
+  if (!isAuthenticated.value || frequencySaving.value || testModeCountdown.value != null || manualPetting.value) return
   frequencySaving.value = true
   const intervalHours = durationSec / 3600
+  const defaultHours = 12
   try {
     await $fetch('/api/bot/frequency', {
       method: 'POST',
@@ -506,6 +510,24 @@ const runTestMode = async (durationSec: number) => {
     })
     pettingIntervalHours.value = intervalHours
     testModeCountdown.value = durationSec
+
+    // Immediately trigger a pet
+    try {
+      const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
+        method: 'POST',
+        body: { force: true },
+      })
+      const msg = res?.result?.message
+      if (msg) alert(msg)
+      await fetchHistory()
+      await fetchHealth()
+      if (workerEnabled.value) await fetchWorkerLogs()
+    } catch (err) {
+      console.error('Test pet failed:', err)
+      const msg = (err as { data?: { message?: string } })?.data?.message || (err as Error)?.message || 'Pet failed'
+      alert(msg)
+    }
+
     if (testModeIntervalId) clearInterval(testModeIntervalId)
     testModeIntervalId = setInterval(() => {
       if (testModeCountdown.value == null) return
@@ -514,7 +536,7 @@ const runTestMode = async (durationSec: number) => {
         if (testModeIntervalId) clearInterval(testModeIntervalId)
         testModeIntervalId = null
         testModeCountdown.value = null
-        setFrequency(12)
+        setFrequency(defaultHours)
       }
     }, 1000)
   } catch (err) {
@@ -603,9 +625,10 @@ onMounted(async () => {
       fetchDelegation(),
       fetchPetterBalance(),
       fetchDelegationOwners(),
+      fetchFrequency(),
     ]
     if (workerEnabled.value) {
-      tasks.push(fetchWorkerLogs(), fetchFrequency())
+      tasks.push(fetchWorkerLogs())
     }
     await Promise.all(tasks)
   }
@@ -614,9 +637,9 @@ onMounted(async () => {
   if (isAuthenticated.value) {
     setInterval(
       () => {
-        const tasks = [fetchHistory(), fetchPetterBalance(), fetchDelegationOwners()]
+        const tasks = [fetchHistory(), fetchPetterBalance(), fetchDelegationOwners(), fetchFrequency()]
         if (workerEnabled.value) {
-          tasks.push(fetchWorkerLogs(), fetchFrequency())
+          tasks.push(fetchWorkerLogs())
         }
         return Promise.all(tasks)
       },
