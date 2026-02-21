@@ -82,6 +82,9 @@ declare module "nitropack/types" {
     '/api/transactions/backfill-gas': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/backfill-gas.post').default>>>>
     }
+    '/api/transactions/clear': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/clear.post').default>>>>
+    }
     '/api/transactions': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/transactions/index.get').default>>>>
     }

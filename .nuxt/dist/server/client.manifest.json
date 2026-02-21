@@ -1,102 +1,18 @@
 {
-  "_BakZCnjD.js": {
-    "resourceType": "script",
-    "module": true,
+  "@vite/client": {
     "prefetch": true,
-    "preload": true,
-    "file": "BakZCnjD.js",
-    "name": "index",
-    "isDynamicEntry": true,
-    "imports": [
-      "node_modules/nuxt/dist/app/entry.js"
-    ],
-    "dynamicImports": [
-      "node_modules/viem/_esm/utils/ccip.js",
-      "node_modules/@noble/curves/esm/secp256k1.js"
-    ]
-  },
-  "node_modules/@noble/curves/esm/secp256k1.js": {
-    "resourceType": "script",
-    "module": true,
-    "prefetch": true,
-    "preload": true,
-    "file": "COZhajwa.js",
-    "name": "secp256k1",
-    "src": "node_modules/@noble/curves/esm/secp256k1.js",
-    "isDynamicEntry": true,
-    "imports": [
-      "_BakZCnjD.js",
-      "node_modules/nuxt/dist/app/entry.js"
-    ]
-  },
-  "node_modules/nuxt/dist/app/components/error-404.vue": {
-    "resourceType": "script",
-    "module": true,
-    "prefetch": true,
-    "preload": true,
-    "file": "DZPhy8S-.js",
-    "name": "error-404",
-    "src": "node_modules/nuxt/dist/app/components/error-404.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "node_modules/nuxt/dist/app/entry.js"
-    ],
-    "css": []
-  },
-  "error-404.MksMKVWr.css": {
-    "file": "error-404.MksMKVWr.css",
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true
-  },
-  "node_modules/nuxt/dist/app/components/error-500.vue": {
-    "resourceType": "script",
-    "module": true,
-    "prefetch": true,
-    "preload": true,
-    "file": "DspriJd8.js",
-    "name": "error-500",
-    "src": "node_modules/nuxt/dist/app/components/error-500.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "node_modules/nuxt/dist/app/entry.js"
-    ],
-    "css": []
-  },
-  "error-500.DOWD7OuR.css": {
-    "file": "error-500.DOWD7OuR.css",
-    "resourceType": "style",
-    "prefetch": true,
-    "preload": true
-  },
-  "node_modules/nuxt/dist/app/entry.js": {
-    "resourceType": "script",
-    "module": true,
-    "prefetch": true,
-    "preload": true,
-    "file": "BuNm8C4v.js",
-    "name": "entry",
-    "src": "node_modules/nuxt/dist/app/entry.js",
     "isEntry": true,
-    "dynamicImports": [
-      "_BakZCnjD.js",
-      "node_modules/nuxt/dist/app/components/error-404.vue",
-      "node_modules/nuxt/dist/app/components/error-500.vue"
-    ],
-    "_globalCSS": true
+    "file": "@vite/client",
+    "css": [],
+    "module": true,
+    "resourceType": "script"
   },
-  "node_modules/viem/_esm/utils/ccip.js": {
+  "/Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/dist/app/entry.js": {
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
-    "file": "Cz1q_b56.js",
-    "name": "ccip",
-    "src": "node_modules/viem/_esm/utils/ccip.js",
-    "isDynamicEntry": true,
-    "imports": [
-      "_BakZCnjD.js",
-      "node_modules/nuxt/dist/app/entry.js"
-    ]
+    "isEntry": true,
+    "file": "/Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/dist/app/entry.js"
   }
 }
