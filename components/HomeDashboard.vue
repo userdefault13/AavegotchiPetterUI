@@ -188,13 +188,22 @@
         <p class="text-slate-400 text-sm mb-4">
           Trigger a petting run now for all delegated gotchis. Skips the 12h cooldown. Use this to test the petter.
         </p>
-        <button
-          @click="manualPet"
-          :disabled="manualPetting"
-          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ manualPetting ? 'Petting...' : 'Pet All Gotchis Now' }}
-        </button>
+        <div class="flex flex-wrap gap-3">
+          <button
+            @click="manualPet"
+            :disabled="manualPetting"
+            class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ manualPetting ? 'Petting...' : 'Pet All Gotchis Now' }}
+          </button>
+          <button
+            @click="checkTriggerConfig"
+            :disabled="configCheckLoading"
+            class="px-4 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-lg transition disabled:opacity-50 text-sm"
+          >
+            {{ configCheckLoading ? 'Checking...' : 'Check config' }}
+          </button>
+        </div>
       </div>
 
       <!-- Bot Control & Delegation -->
@@ -331,6 +340,7 @@ const loading = ref(true)
 const historyLoading = ref(false)
 const historyClearing = ref(false)
 const manualPetting = ref(false)
+const configCheckLoading = ref(false)
 const workerLogsLoading = ref(false)
 const backfillLoading = ref(false)
 const isAuthenticated = ref(false)
@@ -408,6 +418,44 @@ const clearHistory = async () => {
     alert('Failed to clear execution history')
   } finally {
     historyClearing.value = false
+  }
+}
+
+const checkTriggerConfig = async () => {
+  if (!isAuthenticated.value) return
+  configCheckLoading.value = true
+  try {
+    const res = await $fetch<{
+      success: boolean
+      diagnostic?: {
+        hasPetterKey: boolean
+        hasKv: boolean
+        kvOk: boolean
+        petterAddress: string
+        baseRpcUrl: string
+        readyToTrigger: boolean
+        issues: string[] | null
+      }
+      error?: string
+      hint?: string
+    }>('/api/bot/trigger')
+    const d = res.diagnostic
+    if (d) {
+      const lines = [
+        `Petter key: ${d.hasPetterKey ? '✓' : '✗ MISSING'}`,
+        `KV: ${d.hasKv ? (d.kvOk ? '✓' : '✗ connection failed') : '✗ MISSING'}`,
+        `Ready: ${d.readyToTrigger ? 'Yes' : 'No'}`,
+      ]
+      if (d.issues?.length) lines.push('', 'Fix:', ...d.issues)
+      alert(lines.join('\n'))
+    } else {
+      alert(res.error || res.hint || 'Check failed')
+    }
+  } catch (err) {
+    const e = err as { data?: { error?: string }; message?: string }
+    alert(e?.data?.error ?? e?.message ?? 'Failed to check config')
+  } finally {
+    configCheckLoading.value = false
   }
 }
 

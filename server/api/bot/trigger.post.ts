@@ -25,7 +25,9 @@ export default defineEventHandler(async (event) => {
     }
 
     const config = useRuntimeConfig()
-    const privateKey = config.petterPrivateKey || process.env.PETTER_PRIVATE_KEY
+    // Prefer process.env at runtime (Vercel injects at runtime; Nuxt config may be baked empty at build)
+    const privateKey =
+      process.env.PETTER_PRIVATE_KEY || config.petterPrivateKey
     const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || '0x9a3E95f448f3daB367dd9213D4554444faa272F1'
     const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
 
