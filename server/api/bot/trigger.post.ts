@@ -50,10 +50,13 @@ export default defineEventHandler(async (event) => {
     })
 
     return { success: true, result }
-  } catch (error: any) {
-    const msg = error.message || 'Failed to trigger bot'
+  } catch (error: unknown) {
+    const msg =
+      error instanceof Error ? error.message : typeof error === 'string' ? error : 'Failed to trigger bot'
+    console.error('[bot/trigger]', msg, error)
     throw createError({
       statusCode: 500,
+      statusMessage: msg,
       message: msg,
     })
   }

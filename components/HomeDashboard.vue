@@ -426,10 +426,8 @@ const manualPet = async () => {
     if (workerEnabled.value) await fetchWorkerLogs()
   } catch (err: unknown) {
     console.error('Manual pet failed:', err)
-    const msg =
-      (err as { data?: { message?: string } })?.data?.message ||
-      (err as Error)?.message ||
-      'Failed to trigger petting'
+    const e = err as { data?: { message?: string }; message?: string; statusMessage?: string }
+    const msg = e?.data?.message || e?.statusMessage || e?.message || 'Failed to trigger petting'
     alert(msg)
   } finally {
     manualPetting.value = false
@@ -524,7 +522,8 @@ const runTestMode = async (durationSec: number) => {
       if (workerEnabled.value) await fetchWorkerLogs()
     } catch (err) {
       console.error('Test pet failed:', err)
-      const msg = (err as { data?: { message?: string } })?.data?.message || (err as Error)?.message || 'Pet failed'
+      const e = err as { data?: { message?: string }; message?: string; statusMessage?: string }
+      const msg = e?.data?.message || e?.statusMessage || e?.message || 'Pet failed'
       alert(msg)
     }
 
