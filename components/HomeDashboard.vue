@@ -594,8 +594,13 @@ const logout = async () => {
 
 function extractErrorMessage(err: unknown, fallback: string): string {
   if (!err) return fallback
-  const e = err as { data?: { message?: string; error?: string }; statusMessage?: string; message?: string }
-  const msg = e?.data?.message ?? e?.data?.error ?? e?.statusMessage ?? e?.message
+  const e = err as {
+    data?: { message?: string; error?: string };
+    statusMessage?: string;
+    message?: string;
+  }
+  // Server returns { success: false, error: "..." } on 500
+  const msg = e?.data?.error ?? e?.data?.message ?? e?.statusMessage ?? e?.message
   if (typeof msg === 'string' && msg.length > 0) return msg
   if (err instanceof Error && err.message) return err.message
   return fallback
