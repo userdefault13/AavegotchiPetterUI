@@ -182,6 +182,21 @@
         </div>
       </div>
 
+      <!-- Manual Pet -->
+      <div v-if="isAuthenticated && workerEnabled" class="bg-white/5 backdrop-blur border border-white/10 rounded-xl p-6">
+        <h2 class="text-lg font-semibold mb-2">Manual Pet</h2>
+        <p class="text-slate-400 text-sm mb-4">
+          Trigger a petting run now for all delegated gotchis. Skips the 12h cooldown. Use this to test the petter.
+        </p>
+        <button
+          @click="manualPet"
+          :disabled="manualPetting"
+          class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {{ manualPetting ? 'Petting...' : 'Pet All Gotchis Now' }}
+        </button>
+      </div>
+
       <!-- Bot Control & Delegation -->
       <div v-if="isAuthenticated" class="grid md:grid-cols-2 gap-6 mt-6">
         <BotControl v-if="workerEnabled" @triggered="() => { fetchHistory(); fetchWorkerLogs(); }" />
@@ -312,6 +327,7 @@ let testModeIntervalId: ReturnType<typeof setInterval> | null = null
 const loading = ref(true)
 const historyLoading = ref(false)
 const historyClearing = ref(false)
+const manualPetting = ref(false)
 const workerLogsLoading = ref(false)
 const backfillLoading = ref(false)
 const isAuthenticated = ref(false)
@@ -389,6 +405,29 @@ const clearHistory = async () => {
     alert('Failed to clear execution history')
   } finally {
     historyClearing.value = false
+  }
+}
+
+const manualPet = async () => {
+  if (!isAuthenticated.value) return
+  manualPetting.value = true
+  try {
+    const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
+      method: 'POST',
+      body: { force: true },
+    })
+    const msg = res?.result?.message
+    alert(msg || 'Petting completed!')
+    await Promise.all([fetchHistory(), fetchHealth(), fetchWorkerLogs()])
+  } catch (err: unknown) {
+    console.error('Manual pet failed:', err)
+    const msg =
+      (err as { data?: { message?: string } })?.data?.message ||
+      (err as Error)?.message ||
+      'Failed to trigger petting'
+    alert(msg)
+  } finally {
+    manualPetting.value = false
   }
 }
 
