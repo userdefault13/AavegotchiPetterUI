@@ -21,7 +21,6 @@ export default defineEventHandler(async (event) => {
   const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
 
   if (!privateKey || !privateKey.startsWith('0x')) {
-    setResponseStatus(event, 500)
     return {
       success: false,
       error: 'PETTER_PRIVATE_KEY not configured. Set in Vercel env vars to enable manual trigger.',
@@ -55,7 +54,6 @@ export default defineEventHandler(async (event) => {
     const msg =
       error instanceof Error ? error.message : typeof error === 'string' ? error : 'Failed to trigger bot'
     console.error('[bot/trigger]', msg, error)
-    setResponseStatus(event, 500)
     return { success: false, error: msg }
   }
 })

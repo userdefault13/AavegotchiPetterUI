@@ -102,22 +102,23 @@ const toggleBot = async () => {
 const triggerBot = async () => {
   triggering.value = true
   try {
-    const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
-      method: 'POST',
-      body: { force: true },
-    })
+    const res = await $fetch<{
+      success: boolean
+      result?: { message?: string; petted?: number }
+      error?: string
+    }>('/api/bot/trigger', { method: 'POST', body: { force: true } })
+    if (!res.success && res.error) {
+      alert(res.error)
+      return
+    }
     const msg = res?.result?.message
     alert(msg || 'Bot triggered successfully!')
     emit('triggered')
     await fetchStatus()
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Failed to trigger bot:', err)
-    const msg =
-      err?.data?.message ||
-      err?.data?.error ||
-      err?.message ||
-      (typeof err?.data === 'string' ? err.data : null) ||
-      'Failed to trigger bot'
+    const e = err as { data?: { message?: string; error?: string }; message?: string }
+    const msg = e?.data?.error ?? e?.data?.message ?? e?.message ?? 'Failed to trigger bot'
     alert(msg)
   } finally {
     triggering.value = false

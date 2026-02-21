@@ -415,10 +415,15 @@ const manualPet = async () => {
   if (!isAuthenticated.value) return
   manualPetting.value = true
   try {
-    const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
-      method: 'POST',
-      body: { force: true },
-    })
+    const res = await $fetch<{
+      success: boolean
+      result?: { message?: string; petted?: number }
+      error?: string
+    }>('/api/bot/trigger', { method: 'POST', body: { force: true } })
+    if (!res.success && res.error) {
+      alert(res.error)
+      return
+    }
     const msg = res?.result?.message
     alert(msg || 'Petting completed!')
     await fetchHistory()
@@ -426,8 +431,7 @@ const manualPet = async () => {
     if (workerEnabled.value) await fetchWorkerLogs()
   } catch (err: unknown) {
     console.error('Manual pet failed:', err)
-    const msg = extractErrorMessage(err, 'Failed to trigger petting')
-    alert(msg)
+    alert(extractErrorMessage(err, 'Failed to trigger petting'))
   } finally {
     manualPetting.value = false
   }
@@ -510,19 +514,22 @@ const runTestMode = async (durationSec: number) => {
 
     // Immediately trigger a pet
     try {
-      const res = await $fetch<{ success: boolean; result?: { message?: string; petted?: number } }>('/api/bot/trigger', {
-        method: 'POST',
-        body: { force: true },
-      })
-      const msg = res?.result?.message
-      if (msg) alert(msg)
+      const res = await $fetch<{
+        success: boolean
+        result?: { message?: string; petted?: number }
+        error?: string
+      }>('/api/bot/trigger', { method: 'POST', body: { force: true } })
+      if (!res.success && res.error) {
+        alert(res.error)
+      } else if (res?.result?.message) {
+        alert(res.result.message)
+      }
       await fetchHistory()
       await fetchHealth()
       if (workerEnabled.value) await fetchWorkerLogs()
     } catch (err) {
       console.error('Test pet failed:', err)
-      const msg = extractErrorMessage(err, 'Pet failed')
-      alert(msg)
+      alert(extractErrorMessage(err, 'Pet failed'))
     }
 
     if (testModeIntervalId) clearInterval(testModeIntervalId)
