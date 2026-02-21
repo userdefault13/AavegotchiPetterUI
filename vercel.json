@@ -1,9 +1,5 @@
 {
   "buildCommand": "npm run build",
   "framework": "nuxtjs",
-  "installCommand": "npm install",
-  "functions": {
-    "api/bot/run.post.ts": { "maxDuration": 60 },
-    "api/bot/trigger.post.ts": { "maxDuration": 60 }
-  }
+  "installCommand": "npm install"
 }
