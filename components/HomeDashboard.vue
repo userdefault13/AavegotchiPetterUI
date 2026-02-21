@@ -426,8 +426,7 @@ const manualPet = async () => {
     if (workerEnabled.value) await fetchWorkerLogs()
   } catch (err: unknown) {
     console.error('Manual pet failed:', err)
-    const e = err as { data?: { message?: string }; message?: string; statusMessage?: string }
-    const msg = e?.data?.message || e?.statusMessage || e?.message || 'Failed to trigger petting'
+    const msg = extractErrorMessage(err, 'Failed to trigger petting')
     alert(msg)
   } finally {
     manualPetting.value = false
@@ -522,8 +521,7 @@ const runTestMode = async (durationSec: number) => {
       if (workerEnabled.value) await fetchWorkerLogs()
     } catch (err) {
       console.error('Test pet failed:', err)
-      const e = err as { data?: { message?: string }; message?: string; statusMessage?: string }
-      const msg = e?.data?.message || e?.statusMessage || e?.message || 'Pet failed'
+      const msg = extractErrorMessage(err, 'Pet failed')
       alert(msg)
     }
 
@@ -592,6 +590,15 @@ const logout = async () => {
     isAuthenticated.value = false
     window.location.href = '/'
   }
+}
+
+function extractErrorMessage(err: unknown, fallback: string): string {
+  if (!err) return fallback
+  const e = err as { data?: { message?: string; error?: string }; statusMessage?: string; message?: string }
+  const msg = e?.data?.message ?? e?.data?.error ?? e?.statusMessage ?? e?.message
+  if (typeof msg === 'string' && msg.length > 0) return msg
+  if (err instanceof Error && err.message) return err.message
+  return fallback
 }
 
 const formatDate = (val: string | number | undefined) => {
