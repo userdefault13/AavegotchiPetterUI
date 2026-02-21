@@ -1,10 +1,6 @@
-/**
- * POST /api/bot/trigger
- * Manual trigger - calls runPetting directly (Option B: Vercel serverless).
- * Requires auth (dashboard session). Force=true skips 12h cooldown.
- * Always returns 200 with JSON so client gets real error messages (Vercel replaces 500 body).
- */
+import { proxyToPetter } from '~/server/utils/petterProxy'
 import { checkAuth } from '~/lib/auth'
+import { setResponseStatus } from 'h3'
 
 function toErrorMsg(err: unknown): string {
   if (err instanceof Error) return err.message
@@ -16,63 +12,18 @@ function toErrorMsg(err: unknown): string {
   }
 }
 
-function sendOk(event: Parameters<typeof setResponseStatus>[0], body: object) {
-  setResponseStatus(event, 200)
-  return body
-}
-
 export default defineEventHandler(async (event) => {
   try {
     if (!checkAuth(event)) {
-      return sendOk(event, { success: false, error: 'Unauthorized' })
+      setResponseStatus(event, 200)
+      return { success: false, error: 'Unauthorized' }
     }
-
-    const config = useRuntimeConfig()
-    const privateKey =
-      process.env.PETTER_PRIVATE_KEY || config.petterPrivateKey
-    const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || '0x9a3E95f448f3daB367dd9213D4554444faa272F1'
-    const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org'
-
-    if (!privateKey || !privateKey.startsWith('0x')) {
-      return sendOk(event, {
-        success: false,
-        error: 'PETTER_PRIVATE_KEY not configured. Set in Vercel env vars to enable manual trigger.',
-      })
-    }
-
-    let body: { force?: boolean } = {}
-    try {
-      body = (await readBody(event)) as { force?: boolean }
-    } catch {
-      /* empty body ok */
-    }
-
-    // Dynamic import to catch load-time failures (viem, kv) and return 200 with error
-    const { runPetting } = await import('~/lib/pet')
-    const { addManualTriggerLog } = await import('~/lib/kv')
-
-    const result = await runPetting({
-      force: body?.force !== false,
-      privateKey,
-      petterAddress,
-      baseRpcUrl,
-    })
-
-    try {
-      await addManualTriggerLog({
-        id: `manual-${Date.now()}`,
-        timestamp: Date.now(),
-        message: result.message || 'Manual trigger completed',
-        petted: result.petted,
-      })
-    } catch (kvErr) {
-      console.error('[bot/trigger] addManualTriggerLog failed:', kvErr)
-    }
-
-    return sendOk(event, { success: true, result })
+    const result = await proxyToPetter(event, '/api/bot/trigger', { method: 'POST' })
+    setResponseStatus(event, 200)
+    return { success: true, result }
   } catch (error: unknown) {
     const msg = toErrorMsg(error)
-    console.error('[bot/trigger]', msg, error)
-    return sendOk(event, { success: false, error: msg })
+    setResponseStatus(event, 200)
+    return { success: false, error: msg }
   }
 })

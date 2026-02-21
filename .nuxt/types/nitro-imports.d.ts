@@ -47,6 +47,8 @@ declare global {
   const getHeader: typeof import('../../node_modules/nuxt/node_modules/h3').getHeader
   const getHeaders: typeof import('../../node_modules/nuxt/node_modules/h3').getHeaders
   const getMethod: typeof import('../../node_modules/nuxt/node_modules/h3').getMethod
+  const getPetterBaseUrl: typeof import('../../server/utils/petterProxy').getPetterBaseUrl
+  const getPetterSecret: typeof import('../../server/utils/petterProxy').getPetterSecret
   const getProxyRequestHeaders: typeof import('../../node_modules/nuxt/node_modules/h3').getProxyRequestHeaders
   const getQuery: typeof import('../../node_modules/nuxt/node_modules/h3').getQuery
   const getRequestFingerprint: typeof import('../../node_modules/nuxt/node_modules/h3').getRequestFingerprint
@@ -83,6 +85,7 @@ declare global {
   const parseCookies: typeof import('../../node_modules/nuxt/node_modules/h3').parseCookies
   const promisifyNodeListener: typeof import('../../node_modules/nuxt/node_modules/h3').promisifyNodeListener
   const proxyRequest: typeof import('../../node_modules/nuxt/node_modules/h3').proxyRequest
+  const proxyToPetter: typeof import('../../server/utils/petterProxy').proxyToPetter
   const readBody: typeof import('../../node_modules/nuxt/node_modules/h3').readBody
   const readFormData: typeof import('../../node_modules/nuxt/node_modules/h3').readFormData
   const readMultipartFormData: typeof import('../../node_modules/nuxt/node_modules/h3').readMultipartFormData
@@ -139,3 +142,4 @@ export { defineNitroErrorHandler } from 'nitropack/runtime/internal/error/utils'
 export { appendCorsHeaders, appendCorsPreflightHeaders, appendHeader, appendHeaders, appendResponseHeader, appendResponseHeaders, assertMethod, callNodeListener, clearResponseHeaders, clearSession, createApp, createAppEventHandler, createError, createEvent, createEventStream, createRouter, defaultContentType, defineEventHandler, defineLazyEventHandler, defineNodeListener, defineNodeMiddleware, defineRequestMiddleware, defineResponseMiddleware, defineWebSocket, defineWebSocketHandler, deleteCookie, dynamicEventHandler, eventHandler, fetchWithEvent, fromNodeMiddleware, fromPlainHandler, fromWebHandler, getCookie, getHeader, getHeaders, getMethod, getProxyRequestHeaders, getQuery, getRequestFingerprint, getRequestHeader, getRequestHeaders, getRequestHost, getRequestIP, getRequestPath, getRequestProtocol, getRequestURL, getRequestWebStream, getResponseHeader, getResponseHeaders, getResponseStatus, getResponseStatusText, getRouterParam, getRouterParams, getSession, getValidatedQuery, getValidatedRouterParams, handleCacheHeaders, handleCors, isCorsOriginAllowed, isError, isEvent, isEventHandler, isMethod, isPreflightRequest, isStream, isWebResponse, lazyEventHandler, parseCookies, promisifyNodeListener, proxyRequest, readBody, readFormData, readMultipartFormData, readRawBody, readValidatedBody, removeResponseHeader, sanitizeStatusCode, sanitizeStatusMessage, sealSession, send, sendError, sendIterable, sendNoContent, sendProxy, sendRedirect, sendStream, sendWebResponse, serveStatic, setCookie, setHeader, setHeaders, setResponseHeader, setResponseHeaders, setResponseStatus, splitCookiesString, toEventHandler, toNodeListener, toPlainHandler, toWebHandler, toWebRequest, unsealSession, updateSession, useBase, useSession, writeEarlyHints } from 'h3';
 export { buildAssetsURL as __buildAssetsURL, publicAssetsURL as __publicAssetsURL } from '/Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/dist/core/runtime/nitro/utils/paths';
 export { defineAppConfig } from '/Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/dist/core/runtime/nitro/utils/config';
+export { getPetterBaseUrl, getPetterSecret, proxyToPetter } from '/Users/juliuswong/Dev/AavegotchiPetterUI/server/utils/petterProxy';

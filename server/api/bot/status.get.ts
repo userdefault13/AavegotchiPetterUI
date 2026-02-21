@@ -1,13 +1,9 @@
-import { getBotState, checkAuth } from '~/lib'
+import { proxyToPetter } from '~/server/utils/petterProxy'
+import { checkAuth } from '~/lib/auth'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    })
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
-
-  const state = await getBotState()
-  return state || { running: false }
+  return proxyToPetter(event, '/api/bot/status', { method: 'GET' })
 })

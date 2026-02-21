@@ -1,16 +1,9 @@
-import { getWorkerLogs, checkAuth } from '~/lib'
+import { proxyToPetter } from '~/server/utils/petterProxy'
+import { checkAuth } from '~/lib/auth'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    })
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
-
-  const query = getQuery(event)
-  const limit = query.limit ? parseInt(query.limit as string) : 100
-
-  const logs = await getWorkerLogs(Math.min(limit, 200))
-  return logs
+  return proxyToPetter(event, '/api/bot/logs', { method: 'GET' })
 })

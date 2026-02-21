@@ -1,16 +1,9 @@
-import { getErrors, checkAuth } from '~/lib'
+import { proxyToPetter } from '~/server/utils/petterProxy'
+import { checkAuth } from '~/lib/auth'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    })
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
-
-  const query = getQuery(event)
-  const limit = query.limit ? parseInt(query.limit as string) : 50
-
-  const errors = await getErrors(limit)
-  return errors
+  return proxyToPetter(event, '/api/errors', { method: 'GET' })
 })

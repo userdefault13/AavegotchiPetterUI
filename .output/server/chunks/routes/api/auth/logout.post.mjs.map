@@ -1,0 +1,1 @@
+{"version":3,"file":"logout.post.mjs","sources":["../../../../../../server/api/auth/logout.post.ts"],"names":["defineEventHandler"],"mappings":";;;;;;;;;;;;AAEA,oBAAAA,oBAAA,CAAA,OAAA,KAAA,KAAA;AACA,EAAA,YAAA,CAAA,KAAA,CAAA;AACA,EAAA,OAAA,EAAA,SAAA,IAAA,EAAA;AACA,CAAA,CAAA;;;;"}

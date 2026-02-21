@@ -4,6 +4,7 @@
  * Requires auth.
  */
 import { checkAuth } from '~/lib/auth'
+import { getPetterBaseUrl, getPetterSecret } from '~/server/utils/petterProxy'
 
 export default defineEventHandler(async (event) => {
   const authenticated = checkAuth(event)
@@ -12,41 +13,36 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  const hasPetterKey =
-    !!(config.petterPrivateKey && config.petterPrivateKey.startsWith('0x')) ||
-    !!(process.env.PETTER_PRIVATE_KEY && process.env.PETTER_PRIVATE_KEY.startsWith('0x'))
-  const hasKv = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN)
+  const petterUrl = getPetterBaseUrl()
+  const hasSecret = !!getPetterSecret()
 
-  let kvOk = false
-  if (hasKv) {
-    try {
-      const { getBotState } = await import('~/lib/kv')
-      await getBotState()
-      kvOk = true
-    } catch {
-      kvOk = false
-    }
+  let petterOk = false
+  try {
+    const res = await fetch(`${petterUrl}/api/bot/status`, {
+      headers: { 'X-Report-Secret': getPetterSecret() },
+    })
+    petterOk = res.ok
+  } catch {
+    petterOk = false
   }
 
   const issues: string[] = []
-  if (!hasPetterKey) {
-    issues.push('PETTER_PRIVATE_KEY not set in Vercel → Project Settings → Environment Variables')
+  if (!hasSecret) {
+    issues.push('PETTER_API_SECRET not set in .env')
   }
-  if (!hasKv) {
-    issues.push('KV_REST_API_URL or KV_REST_API_TOKEN not set (need Upstash KV)')
-  } else if (!kvOk) {
-    issues.push('KV connection failed - check KV_REST_API_URL and KV_REST_API_TOKEN')
+  if (!petterOk) {
+    issues.push('Petter API unreachable - is Aavegotchi-Petter running? Check PETTER_API_URL')
   }
 
   return {
     success: true,
     diagnostic: {
-      hasPetterKey,
-      hasKv,
-      kvOk,
-      petterAddress: config.petterAddress || process.env.PETTER_ADDRESS || '0x9a3E95f448f3daB367dd9213D4554444faa272F1',
-      baseRpcUrl: (config.baseRpcUrl || process.env.BASE_RPC_URL || 'https://mainnet.base.org').slice(0, 50) + '...',
-      readyToTrigger: hasPetterKey && kvOk,
+      petterUrl: petterUrl.slice(0, 50) + '...',
+      hasSecret,
+      petterOk,
+      petterAddress: config.petterAddress || '0x9a3E95f448f3daB367dd9213D4554444faa272F1',
+      baseRpcUrl: (config.baseRpcUrl || 'https://mainnet.base.org').slice(0, 50) + '...',
+      readyToTrigger: hasSecret && petterOk,
       issues: issues.length > 0 ? issues : null,
     },
   }

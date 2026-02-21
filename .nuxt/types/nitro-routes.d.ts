@@ -25,9 +25,6 @@ declare module "nitropack/types" {
     '/api/bot/logs': {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/logs.get').default>>>>
     }
-    '/api/bot/report': {
-      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/report.post').default>>>>
-    }
     '/api/bot/run': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/run.post').default>>>>
     }
@@ -41,6 +38,7 @@ declare module "nitropack/types" {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/stop.post').default>>>>
     }
     '/api/bot/trigger': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/trigger.get').default>>>>
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/bot/trigger.post').default>>>>
     }
     '/api/delegated-owners': {

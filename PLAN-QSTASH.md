@@ -1,39 +1,31 @@
-# QStash Scheduler Setup (Option B)
+# External Scheduler (Optional)
 
-The petting API runs on Vercel. To run it on a schedule (e.g. every 12 hours), use **Upstash QStash**.
+The petter runs locally with **built-in Nitro scheduled tasks** (see [LOCAL-RUN.md](LOCAL-RUN.md)). No external scheduler is required.
 
-## 1. Create QStash schedule
+If you use an external scheduler (e.g. Upstash QStash, cron-job.org) to hit the API:
+
+## QStash Setup
 
 1. Go to [Upstash Console](https://console.upstash.com/) → QStash
-2. Create a new schedule:
-   - **Destination:** `https://YOUR-DASHBOARD.vercel.app/api/bot/run`
+2. Create a schedule:
+   - **Destination:** `http://localhost:3000/api/bot/run` (or your deployed URL)
    - **Method:** POST
-   - **Headers:**
-     - `Content-Type: application/json`
-     - `X-Report-Secret: YOUR_REPORT_SECRET`
+   - **Headers:** `X-Report-Secret: YOUR_REPORT_SECRET`, `Content-Type: application/json`
    - **Body:** `{"force":false}`
-   - **Cron:** `0 */12 * * *` (every 12 hours at :00) or `0 * * * *` (every hour)
+   - **Cron:** `0 * * * *` (every hour) or `0 */12 * * *` (every 12 hours)
 
-## 2. Env vars required
-
-In Vercel → Project → Settings → Environment Variables:
+## Env vars
 
 | Variable | Description |
 |----------|-------------|
-| `PETTER_PRIVATE_KEY` | Private key of petter wallet (0x...) |
-| `PETTER_ADDRESS` | Petter wallet address (same as key) |
-| `REPORT_SECRET` | Secret for X-Report-Secret (must match QStash header) |
+| `PETTER_PRIVATE_KEY` | Private key (0x...) |
+| `PETTER_ADDRESS` | Petter wallet address |
+| `REPORT_SECRET` | Must match X-Report-Secret header |
 | `KV_REST_API_URL` | Upstash KV URL |
 | `KV_REST_API_TOKEN` | Upstash KV token |
-| `BASE_RPC_URL` | Base RPC (optional, defaults to mainnet.base.org) |
 
-## 3. Test
+## Security
 
-1. **Manual trigger:** In dashboard, click "Trigger Now" (requires auth)
-2. **Cron:** QStash will hit `/api/bot/run` on schedule. The run checks `bot:state.running`—start the bot in the dashboard first.
-
-## 4. Security
-
-- `PETTER_PRIVATE_KEY` is server-only (never sent to client)
+- `PETTER_PRIVATE_KEY` is server-only
 - `/api/bot/run` requires `X-Report-Secret` header
 - Only `interact()` is called—no ETH transfers

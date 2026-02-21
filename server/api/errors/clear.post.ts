@@ -1,13 +1,9 @@
-import { clearErrors, checkAuth } from '~/lib'
+import { proxyToPetter } from '~/server/utils/petterProxy'
+import { checkAuth } from '~/lib/auth'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    })
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
-
-  await clearErrors()
-  return { success: true }
+  return proxyToPetter(event, '/api/errors/clear', { method: 'POST' })
 })

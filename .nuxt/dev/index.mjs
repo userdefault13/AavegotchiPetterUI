@@ -5,11 +5,8 @@ import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
 import { escapeHtml } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/@vue/shared/dist/shared.cjs.js';
-import { getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, defineEventHandler as defineEventHandler$1, getQuery as getQuery$1, readBody, getCookie, deleteCookie, setCookie, createError as createError$1, getHeader, getRouterParam as getRouterParam$1, getResponseStatusText, getResponseStatus as getResponseStatus$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/h3/dist/index.mjs';
-import { isAddress, verifyMessage, http, createPublicClient, createWalletClient, parseAbi, formatEther } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/viem/_esm/index.js';
-import { base } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/viem/_esm/chains/index.js';
-import { privateKeyToAccount } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/viem/_esm/accounts/index.js';
-import { kv } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/@vercel/kv/dist/index.js';
+import { getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, defineEventHandler as defineEventHandler$1, getQuery as getQuery$1, readBody, getCookie, deleteCookie, setCookie, createError as createError$1, getMethod, getHeader, getRouterParam as getRouterParam$1, getResponseStatusText, getResponseStatus as getResponseStatus$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/h3/dist/index.mjs';
+import { isAddress, verifyMessage } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/viem/_esm/index.js';
 import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/ufo/dist/index.mjs';
 import { renderToString } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/vue/server-renderer/index.mjs';
@@ -655,23 +652,20 @@ const _inlineRuntimeConfig = {
   },
   "public": {
     "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
-    "allowedAddresses": "0x2127AA7265D573Aa467f1D73554D17890b872E76",
+    "allowedAddresses": "",
     "baseRpcUrl": "https://mainnet.base.org",
-    "petterAddress": "0x9a3E95f448f3daB367dd9213D4554444faa272F1",
+    "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
     "petterBalanceAddress": "",
-    "workerEnabled": false
+    "workerEnabled": true
   },
-  "kvRestApiUrl": "https://needed-bedbug-58949.upstash.io",
-  "kvRestApiToken": "AeZFAAIncDI0YTIwZmVlODc2MGU0ZmNkYTIyYzg4YWIyYzU4NjY0MnAyNTg5NDk",
+  "petterApiUrl": "http://localhost:3001",
+  "petterApiSecret": "67bee49be8fd7a6ee0b35a933ae5a12ff34861c700a3d09609622c939a0de245",
   "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
-  "allowedAddresses": "0x2127AA7265D573Aa467f1D73554D17890b872E76",
-  "reportSecret": "793f228a4af4f7e66f8c4f56d70045c1fea204b03af25b9f7bac116db84e7751",
-  "petterAddress": "0x9a3E95f448f3daB367dd9213D4554444faa272F1",
+  "allowedAddresses": "",
+  "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
   "baseRpcUrl": "https://mainnet.base.org",
-  "petterPrivateKey": "",
-  "workerUrl": "https://aavegotchi-petter.user-defaults.workers.dev/",
-  "workerEnabled": false,
-  "petterBalanceAddress": ""
+  "petterBalanceAddress": "",
+  "workerEnabled": true
 };
 const envOptions = {
   prefix: "NITRO_",
@@ -1558,11 +1552,11 @@ const _lazy_9LFQow = () => Promise.resolve().then(function () { return config_ge
 const _lazy_tzHLNN = () => Promise.resolve().then(function () { return frequency_get$1; });
 const _lazy_JjSPcC = () => Promise.resolve().then(function () { return frequency_post$1; });
 const _lazy_r9J2XF = () => Promise.resolve().then(function () { return logs_get$1; });
-const _lazy_8oIBSF = () => Promise.resolve().then(function () { return report_post$1; });
 const _lazy_OrOcxI = () => Promise.resolve().then(function () { return run_post$1; });
 const _lazy_ObhiuS = () => Promise.resolve().then(function () { return start_post$1; });
 const _lazy_ZgUbvc = () => Promise.resolve().then(function () { return status_get$1; });
 const _lazy_lqiQgb = () => Promise.resolve().then(function () { return stop_post$1; });
+const _lazy_r9zscl = () => Promise.resolve().then(function () { return trigger_get$1; });
 const _lazy_U2NEtV = () => Promise.resolve().then(function () { return trigger_post$1; });
 const _lazy_7wM_sm = () => Promise.resolve().then(function () { return delegatedOwners_get$1; });
 const _lazy_2O16zh = () => Promise.resolve().then(function () { return clearAll_post$1; });
@@ -1591,11 +1585,11 @@ const handlers = [
   { route: '/api/bot/frequency', handler: _lazy_tzHLNN, lazy: true, middleware: false, method: "get" },
   { route: '/api/bot/frequency', handler: _lazy_JjSPcC, lazy: true, middleware: false, method: "post" },
   { route: '/api/bot/logs', handler: _lazy_r9J2XF, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/report', handler: _lazy_8oIBSF, lazy: true, middleware: false, method: "post" },
   { route: '/api/bot/run', handler: _lazy_OrOcxI, lazy: true, middleware: false, method: "post" },
   { route: '/api/bot/start', handler: _lazy_ObhiuS, lazy: true, middleware: false, method: "post" },
   { route: '/api/bot/status', handler: _lazy_ZgUbvc, lazy: true, middleware: false, method: "get" },
   { route: '/api/bot/stop', handler: _lazy_lqiQgb, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/trigger', handler: _lazy_r9zscl, lazy: true, middleware: false, method: "get" },
   { route: '/api/bot/trigger', handler: _lazy_U2NEtV, lazy: true, middleware: false, method: "post" },
   { route: '/api/delegated-owners', handler: _lazy_7wM_sm, lazy: true, middleware: false, method: "get" },
   { route: '/api/delegation/clear-all', handler: _lazy_2O16zh, lazy: true, middleware: false, method: "post" },
@@ -1943,7 +1937,7 @@ const styles$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
 }, Symbol.toStringTag, { value: 'Module' }));
 
 function ensureRawAddress(value) {
-  const trimmed = (value != null ? value : "").trim();
+  const trimmed = (value ?? "").trim();
   if (!trimmed) {
     throw new Error("Address is required");
   }
@@ -1954,11 +1948,6 @@ function ensureRawAddress(value) {
     throw new Error("Invalid address format. Use a raw wallet address (0x...).");
   }
   return trimmed;
-}
-function isRawAddress(value) {
-  if (!(value == null ? void 0 : value.trim())) return false;
-  if (value.includes(".")) return false;
-  return isAddress(value.trim());
 }
 
 const DEFAULT_ALLOWED = "0x2127aa7265d573aa467f1d73554d17890b872e76".toLowerCase();
@@ -2068,7 +2057,7 @@ const verify_post = defineEventHandler$1(async (event) => {
   } catch (addrErr) {
     throw createError$1({
       statusCode: 400,
-      message: (addrErr == null ? void 0 : addrErr.message) || "Invalid address. Use a raw wallet address (0x...). ENS is not supported on Base."
+      message: addrErr?.message || "Invalid address. Use a raw wallet address (0x...). ENS is not supported on Base."
     });
   }
   const allowedAddress = config.allowedAddress;
@@ -2095,161 +2084,68 @@ const verify_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePrope
   default: verify_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-async function addWorkerLogs(entries) {
-  if (!entries.length) return;
-  for (const e of entries) {
-    await kv.lpush("worker_logs", e);
-  }
-  await kv.ltrim("worker_logs", 0, 199);
+function getPetterBaseUrl() {
+  const config = useRuntimeConfig();
+  const url = config.petterApiUrl || "http://localhost:3001";
+  return String(url).replace(/\/$/, "");
 }
-async function getWorkerLogs(limit = 100) {
+function getPetterSecret() {
+  const config = useRuntimeConfig();
+  return String(config.petterApiSecret || "");
+}
+async function proxyToPetter(event, path, options) {
+  const baseUrl = getPetterBaseUrl();
+  const secret = getPetterSecret();
+  if (!secret) {
+    throw createError$1({ statusCode: 500, message: "PETTER_API_SECRET not configured" });
+  }
+  const method = options?.method || getMethod(event);
+  const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
+  const query = getQuery$1(event);
+  const queryStr = Object.keys(query).length ? `?${new URLSearchParams(query).toString()}` : "";
+  const headers = {
+    "Content-Type": "application/json",
+    "X-Report-Secret": secret
+  };
+  let body;
+  if (options?.body !== void 0) {
+    body = JSON.stringify(options.body);
+  } else if (["POST", "PUT", "PATCH"].includes(method)) {
+    try {
+      const raw = await readBody(event);
+      body = raw ? JSON.stringify(raw) : void 0;
+    } catch {
+    }
+  }
+  const res = await fetch(`${url}${queryStr}`, {
+    method,
+    headers,
+    body
+  });
+  const text = await res.text();
+  let data;
   try {
-    const logs = await kv.lrange("worker_logs", 0, limit - 1);
-    return logs || [];
+    data = text ? JSON.parse(text) : {};
   } catch {
-    return [];
+    data = { error: text || "Invalid response" };
   }
-}
-async function getBotState() {
-  try {
-    const state = await kv.get("bot:state");
-    return state || { running: false };
-  } catch {
-    return { running: false };
+  if (!res.ok) {
+    const err = data;
+    throw createError$1({
+      statusCode: res.status,
+      message: err?.error || res.statusText || "Petter API error"
+    });
   }
-}
-async function setBotState(state) {
-  await kv.set("bot:state", state);
-}
-async function addTransaction(transaction) {
-  await kv.lpush("transactions", transaction);
-  await kv.ltrim("transactions", 0, 99);
-}
-async function getTransactions(limit = 50) {
-  try {
-    const transactions = await kv.lrange("transactions", 0, limit - 1);
-    return transactions || [];
-  } catch {
-    return [];
-  }
-}
-async function clearTransactions() {
-  await kv.del("transactions");
-}
-async function setTransactions(transactions) {
-  await kv.del("transactions");
-  if (transactions.length === 0) return;
-  const ordered = [...transactions].reverse();
-  await kv.lpush("transactions", ...ordered);
-  await kv.ltrim("transactions", 0, 99);
-}
-async function getTransaction(hash) {
-  const transactions = await getTransactions(100);
-  return transactions.find((t) => t.hash === hash) || null;
-}
-async function addManualTriggerLog(log) {
-  await kv.lpush("manual_triggers", log);
-  await kv.ltrim("manual_triggers", 0, 99);
-}
-async function getManualTriggerLogs(limit = 50) {
-  try {
-    const logs = await kv.lrange("manual_triggers", 0, limit - 1);
-    return logs || [];
-  } catch {
-    return [];
-  }
-}
-async function clearManualTriggerLogs() {
-  await kv.del("manual_triggers");
-}
-async function addError(error) {
-  await kv.lpush("errors", error);
-  await kv.ltrim("errors", 0, 99);
-}
-async function getErrors(limit = 50) {
-  try {
-    const errors = await kv.lrange("errors", 0, limit - 1);
-    return errors || [];
-  } catch {
-    return [];
-  }
-}
-async function clearErrors() {
-  await kv.del("errors");
-}
-async function getDelegatedOwners() {
-  try {
-    const owners = await kv.get("delegated:owners");
-    return owners || [];
-  } catch {
-    return [];
-  }
-}
-async function addDelegatedOwner(owner) {
-  if (!owner || typeof owner !== "string") return;
-  const normalized = owner.toLowerCase();
-  const owners = await getDelegatedOwners();
-  if (!owners.includes(normalized)) {
-    owners.push(normalized);
-    await kv.set("delegated:owners", owners);
-  }
-}
-async function removeDelegatedOwner(owner) {
-  if (!owner || typeof owner !== "string") return;
-  const normalized = owner.toLowerCase();
-  const owners = await getDelegatedOwners();
-  const filtered = owners.filter((o) => o !== normalized);
-  if (filtered.length !== owners.length) {
-    await kv.set("delegated:owners", filtered);
-  }
-}
-async function clearAllDelegatedOwners() {
-  const owners = await getDelegatedOwners();
-  await kv.set("delegated:owners", []);
-  return owners.length;
-}
-async function isDelegatedOwner(owner) {
-  if (!owner || typeof owner !== "string") return false;
-  const owners = await getDelegatedOwners();
-  return owners.includes(owner.toLowerCase());
-}
-const PETTING_INTERVAL_KEY = "bot:petting_interval_hours";
-const DEFAULT_PETTING_INTERVAL = 12;
-const MIN_INTERVAL_HOURS = 30 / 3600;
-async function getPettingIntervalHours() {
-  try {
-    const val = await kv.get(PETTING_INTERVAL_KEY);
-    if (typeof val === "number" && val >= MIN_INTERVAL_HOURS && val <= 24) return val;
-  } catch {
-  }
-  return DEFAULT_PETTING_INTERVAL;
-}
-async function setPettingIntervalHours(hours) {
-  const clamped = Math.max(MIN_INTERVAL_HOURS, Math.min(24, hours));
-  await kv.set(PETTING_INTERVAL_KEY, clamped);
+  return data;
 }
 
 const config_get = defineEventHandler$1(async (event) => {
-  var _a;
-  const config = useRuntimeConfig();
-  const reportSecret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!reportSecret) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Report secret not configured"
-    });
+  const secret = getPetterSecret();
+  const header = getHeader(event, "x-report-secret");
+  if (!secret || header !== secret) {
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const authHeader = getHeader(event, "x-report-secret");
-  if (authHeader !== reportSecret) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
-  }
-  const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || "https://mainnet.base.org";
-  const pettingIntervalHours = await getPettingIntervalHours();
-  const botState = await getBotState();
-  return { baseRpcUrl, pettingIntervalHours, running: (_a = botState == null ? void 0 : botState.running) != null ? _a : false };
+  return proxyToPetter(event, "/api/bot/config", { method: "GET" });
 });
 
 const config_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2259,13 +2155,9 @@ const config_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const frequency_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const hours = await getPettingIntervalHours();
-  return { pettingIntervalHours: hours };
+  return proxyToPetter(event, "/api/bot/frequency", { method: "GET" });
 });
 
 const frequency_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2275,21 +2167,9 @@ const frequency_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
 
 const frequency_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const body = await readBody(event).catch(() => ({}));
-  const hours = body == null ? void 0 : body.pettingIntervalHours;
-  if (typeof hours !== "number" || hours < 30 / 3600 || hours > 24) {
-    throw createError$1({
-      statusCode: 400,
-      message: "pettingIntervalHours must be between 30 seconds and 24 hours"
-    });
-  }
-  await setPettingIntervalHours(hours);
-  return { pettingIntervalHours: hours, ok: true };
+  return proxyToPetter(event, "/api/bot/frequency", { method: "POST" });
 });
 
 const frequency_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2299,15 +2179,9 @@ const frequency_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
 
 const logs_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const query = getQuery$1(event);
-  const limit = query.limit ? parseInt(query.limit) : 100;
-  const logs = await getWorkerLogs(Math.min(limit, 200));
-  return logs;
+  return proxyToPetter(event, "/api/bot/logs", { method: "GET" });
 });
 
 const logs_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2315,279 +2189,13 @@ const logs_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
   default: logs_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const report_post = defineEventHandler$1(async (event) => {
-  var _a;
-  const config = useRuntimeConfig();
-  const reportSecret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!reportSecret) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Report secret not configured"
-    });
-  }
-  const authHeader = getHeader(event, "x-report-secret");
-  if (authHeader !== reportSecret) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Invalid report secret"
-    });
-  }
-  const body = await readBody(event);
-  if (!body || typeof body !== "object") {
-    throw createError$1({
-      statusCode: 400,
-      message: "Invalid request body"
-    });
-  }
-  const state = await getBotState();
-  if (body.success && body.transactionHash && body.blockNumber !== void 0) {
-    await addTransaction({
-      hash: body.transactionHash,
-      timestamp: Date.now(),
-      blockNumber: body.blockNumber,
-      gasUsed: body.gasUsed || "0",
-      gasCostWei: body.gasCostWei,
-      tokenIds: body.tokenIds || []
-    });
-    await setBotState({
-      ...state,
-      running: true,
-      lastRun: Date.now(),
-      lastError: void 0,
-      lastRunMessage: body.message
-    });
-  } else if (!body.success && body.error) {
-    await addError({
-      id: Date.now().toString(),
-      timestamp: Date.now(),
-      message: body.error,
-      type: "CloudflareWorkerError"
-    });
-    await setBotState({
-      ...state,
-      lastError: body.error,
-      lastRunMessage: void 0
-    });
-  } else {
-    await setBotState({
-      ...state,
-      lastRun: Date.now(),
-      lastError: void 0,
-      lastRunMessage: body.message
-    });
-  }
-  if ((_a = body.logs) == null ? void 0 : _a.length) {
-    const valid = body.logs.filter(
-      (l) => typeof l.timestamp === "number" && ["info", "warn", "error"].includes(l.level) && typeof l.message === "string"
-    );
-    if (valid.length) {
-      await addWorkerLogs(valid);
-    }
-  }
-  return { ok: true };
-});
-
-const report_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
-  __proto__: null,
-  default: report_post
-}, Symbol.toStringTag, { value: 'Module' }));
-
-const AAVEGOTCHI_DIAMOND = "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF";
-const AAVEGOTCHI_ABI = parseAbi([
-  "function interact(uint256[] calldata _tokenIds) external",
-  "function tokenIdsOfOwner(address _owner) external view returns (uint32[] memory)",
-  "function getAavegotchi(uint256 _tokenId) external view returns (tuple(uint256 tokenId, string name, address owner, uint256 randomNumber, uint256 status, int16[6] numericTraits, int16[6] modifiedNumericTraits, uint16[16] equippedWearables, address collateral, address escrow, uint256 stakedAmount, uint256 minimumStake, uint256 kinship, uint256 lastInteracted, uint256 experience, uint256 toNextLevel, uint256 usedSkillPoints, uint256 level, uint256 hauntId, uint256 baseRarityScore, uint256 modifiedRarityScore, bool locked, tuple(uint256 balance, uint256 itemId, uint256[] itemBalances)[] items))"
-]);
-async function runPetting(options) {
-  var _a;
-  const { force = false, privateKey, petterAddress, baseRpcUrl } = options;
-  const logs = [];
-  const log = (level, msg) => {
-    logs.push({ timestamp: Date.now(), level, message: msg });
-  };
-  log("info", `Starting run (force=${force})`);
-  const [botState, pettingIntervalHours] = await Promise.all([
-    getBotState(),
-    getPettingIntervalHours()
-  ]);
-  log("info", `Petting interval: ${pettingIntervalHours}h`);
-  if (!(botState == null ? void 0 : botState.running) && !force) {
-    log("info", "Bot is stopped. Skipping. Start the bot in the dashboard to run on schedule.");
-    await addWorkerLogs(logs);
-    await setBotState({
-      ...botState,
-      lastRun: Date.now(),
-      lastRunMessage: "Bot stopped, skipped"
-    });
-    return { success: true, message: "Bot stopped, skipped", petted: 0 };
-  }
-  const transport = http(baseRpcUrl);
-  const publicClient = createPublicClient({ chain: base, transport });
-  const account = privateKeyToAccount(privateKey);
-  const walletClient = createWalletClient({
-    account,
-    chain: base,
-    transport
-  });
-  const delegatedOwners = await getDelegatedOwners();
-  const delegatedLower = delegatedOwners.filter((o) => typeof o === "string" && o.length > 0).map((o) => o.toLowerCase());
-  const ownersToCheck = [.../* @__PURE__ */ new Set([petterAddress.toLowerCase(), ...delegatedLower])];
-  log("info", `Checking ${ownersToCheck.length} owner(s) for gotchis`);
-  const allTokenIds = [];
-  for (const owner of ownersToCheck) {
-    try {
-      const tokenIds = await publicClient.readContract({
-        address: AAVEGOTCHI_DIAMOND,
-        abi: AAVEGOTCHI_ABI,
-        functionName: "tokenIdsOfOwner",
-        args: [owner]
-      });
-      const ids = (tokenIds || []).map((id) => id.toString());
-      allTokenIds.push(...ids);
-      log("info", `Owner ${owner.slice(0, 10)}...: ${ids.length} gotchi(s)`);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : String(err);
-      log("error", `tokenIdsOfOwner(${owner.slice(0, 10)}...): ${msg}`);
-    }
-  }
-  if (allTokenIds.length === 0) {
-    const msg = delegatedOwners.length > 0 ? "No Aavegotchis found for delegated owners" : "No delegated owners or Aavegotchis found";
-    log("info", msg);
-    await addWorkerLogs(logs);
-    await setBotState({ ...botState, lastRun: Date.now(), lastRunMessage: msg });
-    return { success: true, message: msg, petted: 0 };
-  }
-  let readyToPet = [];
-  if (force) {
-    readyToPet = [...allTokenIds];
-  } else {
-    const block = await publicClient.getBlock({ blockTag: "latest" });
-    const currentTimestamp = (_a = block == null ? void 0 : block.timestamp) != null ? _a : BigInt(Math.floor(Date.now() / 1e3));
-    let anyNeedsKinship = false;
-    for (const tokenId of allTokenIds) {
-      try {
-        const gotchi = await publicClient.readContract({
-          address: AAVEGOTCHI_DIAMOND,
-          abi: AAVEGOTCHI_ABI,
-          functionName: "getAavegotchi",
-          args: [BigInt(tokenId)]
-        });
-        const lastInteracted = Number(gotchi.lastInteracted);
-        const hoursSince = (Number(currentTimestamp) - lastInteracted) / 3600;
-        if (hoursSince >= pettingIntervalHours) {
-          anyNeedsKinship = true;
-          break;
-        }
-      } catch (err) {
-        const msg = err instanceof Error ? err.message : String(err);
-        log("warn", `getAavegotchi(${tokenId}): ${msg}`);
-      }
-    }
-    if (anyNeedsKinship) {
-      readyToPet = [...allTokenIds];
-    }
-  }
-  if (readyToPet.length === 0) {
-    const msg = force ? "No Aavegotchis to pet." : `No Aavegotchis ready for kinship (${pettingIntervalHours}h cooldown). Checked ${allTokenIds.length} gotchis.`;
-    log("info", msg);
-    await addWorkerLogs(logs);
-    await setBotState({ ...botState, lastRun: Date.now(), lastRunMessage: msg });
-    return { success: true, message: msg, petted: 0 };
-  }
-  log("info", `Petting ${readyToPet.length} gotchi(s)`);
-  try {
-    const hash = await walletClient.writeContract({
-      address: AAVEGOTCHI_DIAMOND,
-      abi: AAVEGOTCHI_ABI,
-      functionName: "interact",
-      args: [readyToPet.map((id) => BigInt(id))],
-      account
-    });
-    if (!hash) {
-      throw new Error("Transaction hash is null");
-    }
-    const receipt = await publicClient.waitForTransactionReceipt({ hash });
-    const gasCostWei = receipt.gasUsed && receipt.effectiveGasPrice ? (receipt.gasUsed * receipt.effectiveGasPrice).toString() : void 0;
-    log("info", `Tx ${hash} confirmed`);
-    await addTransaction({
-      hash,
-      timestamp: Date.now(),
-      blockNumber: Number(receipt.blockNumber),
-      gasUsed: receipt.gasUsed.toString(),
-      gasCostWei,
-      tokenIds: readyToPet
-    });
-    await addWorkerLogs(logs);
-    await setBotState({
-      ...botState,
-      running: true,
-      lastRun: Date.now(),
-      lastError: void 0,
-      lastRunMessage: `Petted ${readyToPet.length} Aavegotchi(s)`
-    });
-    return {
-      success: true,
-      message: `Petted ${readyToPet.length} Aavegotchi(s)`,
-      petted: readyToPet.length,
-      transactionHash: hash,
-      blockNumber: Number(receipt.blockNumber)
-    };
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    log("error", `Transaction failed: ${msg}`);
-    await addWorkerLogs(logs);
-    await addError({
-      id: Date.now().toString(),
-      timestamp: Date.now(),
-      message: msg,
-      type: "PettingError"
-    });
-    await setBotState({
-      ...botState,
-      lastError: msg,
-      lastRunMessage: void 0
-    });
-    throw err;
-  }
-}
-
-function checkRunAuth(event) {
-  const config = useRuntimeConfig();
-  const secret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!secret) return false;
-  const header = getHeader(event, "x-report-secret");
-  return header === secret;
-}
 const run_post = defineEventHandler$1(async (event) => {
-  if (!checkRunAuth(event)) {
+  const secret = getPetterSecret();
+  const header = getHeader(event, "x-report-secret");
+  if (!secret || header !== secret) {
     throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const config = useRuntimeConfig();
-  const privateKey = config.petterPrivateKey || process.env.PETTER_PRIVATE_KEY;
-  const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || "0x9a3E95f448f3daB367dd9213D4554444faa272F1";
-  const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || "https://mainnet.base.org";
-  if (!privateKey || !privateKey.startsWith("0x")) {
-    throw createError$1({
-      statusCode: 500,
-      message: "PETTER_PRIVATE_KEY not configured. Set in Vercel env vars."
-    });
-  }
-  let body = {};
-  try {
-    body = await readBody(event);
-  } catch {
-  }
-  try {
-    return await runPetting({
-      force: (body == null ? void 0 : body.force) === true,
-      privateKey,
-      petterAddress,
-      baseRpcUrl
-    });
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err);
-    throw createError$1({ statusCode: 500, message: msg });
-  }
+  return proxyToPetter(event, "/api/bot/run", { method: "POST" });
 });
 
 const run_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2597,14 +2205,9 @@ const run_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty
 
 const start_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const state = await getBotState();
-  await setBotState({ ...state, running: true });
-  return { success: true, running: true };
+  return proxyToPetter(event, "/api/bot/start", { method: "POST" });
 });
 
 const start_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2614,13 +2217,9 @@ const start_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const status_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const state = await getBotState();
-  return state || { running: false };
+  return proxyToPetter(event, "/api/bot/status", { method: "GET" });
 });
 
 const status_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2630,14 +2229,9 @@ const status_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const stop_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const state = await getBotState();
-  await setBotState({ ...state, running: false });
-  return { success: true, running: false };
+  return proxyToPetter(event, "/api/bot/stop", { method: "POST" });
 });
 
 const stop_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2645,45 +2239,70 @@ const stop_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: stop_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const trigger_post = defineEventHandler$1(async (event) => {
-  if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+const trigger_get = defineEventHandler$1(async (event) => {
+  const authenticated = checkAuth(event);
+  if (!authenticated) {
+    return { success: false, error: "Unauthorized", hint: "Connect wallet and sign in first" };
   }
   const config = useRuntimeConfig();
-  const privateKey = config.petterPrivateKey || process.env.PETTER_PRIVATE_KEY;
-  const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || "0x9a3E95f448f3daB367dd9213D4554444faa272F1";
-  const baseRpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || "https://mainnet.base.org";
-  if (!privateKey || !privateKey.startsWith("0x")) {
-    return {
-      success: false,
-      error: "PETTER_PRIVATE_KEY not configured. Set in Vercel env vars to enable manual trigger."
-    };
-  }
+  const petterUrl = getPetterBaseUrl();
+  const hasSecret = !!getPetterSecret();
+  let petterOk = false;
   try {
-    let body = {};
-    try {
-      body = await readBody(event);
-    } catch {
+    const res = await fetch(`${petterUrl}/api/bot/status`, {
+      headers: { "X-Report-Secret": getPetterSecret() }
+    });
+    petterOk = res.ok;
+  } catch {
+    petterOk = false;
+  }
+  const issues = [];
+  if (!hasSecret) {
+    issues.push("PETTER_API_SECRET not set in .env");
+  }
+  if (!petterOk) {
+    issues.push("Petter API unreachable - is Aavegotchi-Petter running? Check PETTER_API_URL");
+  }
+  return {
+    success: true,
+    diagnostic: {
+      petterUrl: petterUrl.slice(0, 50) + "...",
+      hasSecret,
+      petterOk,
+      petterAddress: config.petterAddress || "0x9a3E95f448f3daB367dd9213D4554444faa272F1",
+      baseRpcUrl: (config.baseRpcUrl || "https://mainnet.base.org").slice(0, 50) + "...",
+      readyToTrigger: hasSecret && petterOk,
+      issues: issues.length > 0 ? issues : null
     }
-    const result = await runPetting({
-      force: (body == null ? void 0 : body.force) !== false,
-      privateKey,
-      petterAddress,
-      baseRpcUrl
-    });
-    await addManualTriggerLog({
-      id: `manual-${Date.now()}`,
-      timestamp: Date.now(),
-      message: result.message || "Manual trigger completed",
-      petted: result.petted
-    });
+  };
+});
+
+const trigger_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
+  __proto__: null,
+  default: trigger_get
+}, Symbol.toStringTag, { value: 'Module' }));
+
+function toErrorMsg(err) {
+  if (err instanceof Error) return err.message;
+  if (typeof err === "string") return err;
+  try {
+    return String(err);
+  } catch {
+    return "Unknown error";
+  }
+}
+const trigger_post = defineEventHandler$1(async (event) => {
+  try {
+    if (!checkAuth(event)) {
+      setResponseStatus(event, 200);
+      return { success: false, error: "Unauthorized" };
+    }
+    const result = await proxyToPetter(event, "/api/bot/trigger", { method: "POST" });
+    setResponseStatus(event, 200);
     return { success: true, result };
   } catch (error) {
-    const msg = error instanceof Error ? error.message : typeof error === "string" ? error : "Failed to trigger bot";
-    console.error("[bot/trigger]", msg, error);
+    const msg = toErrorMsg(error);
+    setResponseStatus(event, 200);
     return { success: false, error: msg };
   }
 });
@@ -2694,23 +2313,12 @@ const trigger_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProp
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const delegatedOwners_get = defineEventHandler$1(async (event) => {
-  const config = useRuntimeConfig();
-  const reportSecret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!reportSecret) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Report secret not configured"
-    });
+  const secret = getPetterSecret();
+  const header = getHeader(event, "x-report-secret");
+  if (!secret || header !== secret) {
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const authHeader = getHeader(event, "x-report-secret");
-  if (authHeader !== reportSecret) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
-  }
-  const owners = await getDelegatedOwners();
-  return { owners };
+  return proxyToPetter(event, "/api/delegated-owners", { method: "GET" });
 });
 
 const delegatedOwners_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2718,30 +2326,11 @@ const delegatedOwners_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.def
   default: delegatedOwners_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-function checkClearAuth$1(event) {
-  if (checkAuth(event)) return true;
-  const config = useRuntimeConfig();
-  const secret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!secret) return false;
-  const header = getHeader(event, "x-report-secret");
-  return header === secret;
-}
 const clearAll_post = defineEventHandler$1(async (event) => {
-  if (!checkClearAuth$1(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+  if (!checkAuth(event)) {
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const config = useRuntimeConfig();
-  const petterAddress = config.petterAddress || process.env.PETTER_ADDRESS || "0x9a3E95f448f3daB367dd9213D4554444faa272F1";
-  const count = await clearAllDelegatedOwners();
-  const revokeHint = `Each owner should revoke on-chain: setPetOperatorForAll(${petterAddress}, false)` ;
-  return {
-    success: true,
-    message: `Unregistered ${count} delegate(s). ${revokeHint}`,
-    count
-  };
+  return proxyToPetter(event, "/api/delegation/clear-all", { method: "POST" });
 });
 
 const clearAll_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2749,75 +2338,11 @@ const clearAll_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: clearAll_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const AAVEGOTCHI_DIAMOND_ADDRESS$2 = "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF";
-const AAVEGOTCHI_FACET_ABI$2 = parseAbi([
-  "function tokenIdsOfOwner(address _owner) external view returns (uint32[] memory)",
-  "function isPetOperatorForAll(address _owner, address _operator) external view returns (bool)"
-]);
 const owners_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const config = useRuntimeConfig();
-  if (!config.baseRpcUrl) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Base RPC not configured"
-    });
-  }
-  try {
-    const owners = await getDelegatedOwners();
-    const rawOwners = owners.filter((a) => isRawAddress(a));
-    if (rawOwners.length === 0) {
-      return { owners: [], totalGotchis: 0 };
-    }
-    const client = createPublicClient({
-      chain: base,
-      transport: http(config.baseRpcUrl)
-    });
-    const petterAddress = config.petterAddress || "";
-    if (!petterAddress || !petterAddress.startsWith("0x")) {
-      return { owners: [], totalGotchis: 0 };
-    }
-    const results = await Promise.all(
-      rawOwners.map(async (address) => {
-        try {
-          const [tokenIds, approved] = await Promise.all([
-            client.readContract({
-              address: AAVEGOTCHI_DIAMOND_ADDRESS$2,
-              abi: AAVEGOTCHI_FACET_ABI$2,
-              functionName: "tokenIdsOfOwner",
-              args: [address]
-            }),
-            client.readContract({
-              address: AAVEGOTCHI_DIAMOND_ADDRESS$2,
-              abi: AAVEGOTCHI_FACET_ABI$2,
-              functionName: "isPetOperatorForAll",
-              args: [address, petterAddress]
-            })
-          ]);
-          const gotchiCount = approved ? tokenIds.length : 0;
-          return { address, gotchiCount, approved };
-        } catch (err) {
-          return { address, gotchiCount: 0, approved: false };
-        }
-      })
-    );
-    const approvedOwners = results.filter((r) => r.approved);
-    const totalGotchis = approvedOwners.reduce((sum, r) => sum + r.gotchiCount, 0);
-    return {
-      owners: approvedOwners.map(({ address, gotchiCount }) => ({ address, gotchiCount })),
-      totalGotchis
-    };
-  } catch (err) {
-    throw createError$1({
-      statusCode: 500,
-      message: err.message || "Failed to fetch delegation owners"
-    });
-  }
+  return proxyToPetter(event, "/api/delegation/owners", { method: "GET" });
 });
 
 const owners_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2825,66 +2350,18 @@ const owners_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: owners_get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const AAVEGOTCHI_DIAMOND_ADDRESS$1 = "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF";
-const AAVEGOTCHI_FACET_ABI$1 = parseAbi([
-  "function isPetOperatorForAll(address _owner, address _operator) external view returns (bool)",
-  "function setPetOperatorForAll(address _operator, bool _approved) external"
-]);
 const register_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
-  }
-  const config = useRuntimeConfig();
-  const petterAddress = config.petterAddress || config.walletAddress;
-  if (!petterAddress || !config.baseRpcUrl) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Petter not configured"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
   const session = getCookie(event, "auth_session");
   if (!session) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Not authenticated"
-    });
+    throw createError$1({ statusCode: 401, message: "Not authenticated" });
   }
-  const ownerAddress = session;
-  try {
-    const client = createPublicClient({
-      chain: base,
-      transport: http(config.baseRpcUrl)
-    });
-    const isApproved = await client.readContract({
-      address: AAVEGOTCHI_DIAMOND_ADDRESS$1,
-      abi: AAVEGOTCHI_FACET_ABI$1,
-      functionName: "isPetOperatorForAll",
-      args: [ownerAddress, petterAddress]
-    });
-    if (!isApproved) {
-      throw createError$1({
-        statusCode: 400,
-        message: "Please approve the petter first. Call setPetOperatorForAll on the Aavegotchi contract."
-      });
-    }
-    const alreadyRegistered = await isDelegatedOwner(ownerAddress);
-    if (!alreadyRegistered) {
-      await addDelegatedOwner(ownerAddress);
-    }
-    return {
-      success: true,
-      message: "Registered for auto-petting. Your Aavegotchis will be petted every 12 hours."
-    };
-  } catch (err) {
-    if (err.statusCode) throw err;
-    throw createError$1({
-      statusCode: 500,
-      message: err.message || "Registration failed"
-    });
-  }
+  return proxyToPetter(event, "/api/delegation/register", {
+    method: "POST",
+    body: { ownerAddress: session }
+  });
 });
 
 const register_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2892,52 +2369,15 @@ const register_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePro
   default: register_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const AAVEGOTCHI_DIAMOND_ADDRESS = "0xA99c4B08201F2913Db8D28e71d020c4298F29dBF";
-const AAVEGOTCHI_FACET_ABI = parseAbi([
-  "function isPetOperatorForAll(address _owner, address _operator) external view returns (bool)"
-]);
 const registered_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
   const session = getCookie(event, "auth_session");
   if (!session) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Not authenticated"
-    });
+    throw createError$1({ statusCode: 401, message: "Not authenticated" });
   }
-  try {
-    const ownerAddress = ensureRawAddress(session);
-    const inKv = await isDelegatedOwner(ownerAddress);
-    if (!inKv) {
-      return { registered: false };
-    }
-    const config = useRuntimeConfig();
-    const petterAddress = config.petterAddress || "";
-    if (!petterAddress || !petterAddress.startsWith("0x")) {
-      return { registered: false };
-    }
-    const client = createPublicClient({
-      chain: base,
-      transport: http(config.baseRpcUrl || "https://mainnet.base.org")
-    });
-    const approved = await client.readContract({
-      address: AAVEGOTCHI_DIAMOND_ADDRESS,
-      abi: AAVEGOTCHI_FACET_ABI,
-      functionName: "isPetOperatorForAll",
-      args: [ownerAddress, petterAddress]
-    });
-    return { registered: inKv && approved };
-  } catch (addrErr) {
-    throw createError$1({
-      statusCode: 400,
-      message: (addrErr == null ? void 0 : addrErr.message) || "Invalid address format"
-    });
-  }
+  return proxyToPetter(event, `/api/delegation/registered?address=${encodeURIComponent(session)}`, { method: "GET" });
 });
 
 const registered_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2947,24 +2387,16 @@ const registered_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePr
 
 const unregister_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
   const session = getCookie(event, "auth_session");
   if (!session) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Not authenticated"
-    });
+    throw createError$1({ statusCode: 401, message: "Not authenticated" });
   }
-  const ownerAddress = session.toLowerCase();
-  await removeDelegatedOwner(ownerAddress);
-  return {
-    success: true,
-    message: "Unregistered from auto-petting. Revoke on-chain to fully remove the petter."
-  };
+  return proxyToPetter(event, "/api/delegation/unregister", {
+    method: "POST",
+    body: { ownerAddress: session.toLowerCase() }
+  });
 });
 
 const unregister_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2974,13 +2406,9 @@ const unregister_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineP
 
 const clear_post$2 = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  await clearErrors();
-  return { success: true };
+  return proxyToPetter(event, "/api/errors/clear", { method: "POST" });
 });
 
 const clear_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -2990,15 +2418,9 @@ const clear_post$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const index_get$2 = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const query = getQuery$1(event);
-  const limit = query.limit ? parseInt(query.limit) : 50;
-  const errors = await getErrors(limit);
-  return errors;
+  return proxyToPetter(event, "/api/errors", { method: "GET" });
 });
 
 const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3006,53 +2428,16 @@ const index_get$3 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
   default: index_get$2
 }, Symbol.toStringTag, { value: 'Module' }));
 
-const health_get = defineEventHandler$1(async () => {
-  var _a, _b, _c;
-  try {
-    const [state, transactions, errors] = await Promise.all([
-      getBotState(),
-      getTransactions(100),
-      getErrors(100)
-    ]);
-    const totalPetted = transactions.reduce((sum, tx) => sum + tx.tokenIds.length, 0);
-    const last24h = transactions.filter(
-      (tx) => Date.now() - tx.timestamp < 24 * 60 * 60 * 1e3
-    ).length;
-    const errorsLast24h = errors.filter(
-      (e) => Date.now() - e.timestamp < 24 * 60 * 60 * 1e3
-    ).length;
-    const totalGasCostWei = transactions.reduce((sum, tx) => {
-      const wei = tx.gasCostWei ? BigInt(tx.gasCostWei) : /* @__PURE__ */ BigInt("0");
-      return sum + wei;
-    }, /* @__PURE__ */ BigInt("0"));
-    const totalGasCostEth = Number(totalGasCostWei) / 1e18;
+const health_get = defineEventHandler$1(async (event) => {
+  if (!checkAuth(event)) {
     return {
       status: "ok",
       timestamp: (/* @__PURE__ */ new Date()).toISOString(),
       service: "aavegotchi-petter-dashboard",
-      bot: {
-        running: (_a = state == null ? void 0 : state.running) != null ? _a : false,
-        lastRun: (state == null ? void 0 : state.lastRun) ? new Date(state.lastRun).toISOString() : null,
-        lastError: (_b = state == null ? void 0 : state.lastError) != null ? _b : null,
-        lastRunMessage: (_c = state == null ? void 0 : state.lastRunMessage) != null ? _c : null
-      },
-      stats: {
-        totalTransactions: transactions.length,
-        totalAavegotchisPetted: totalPetted,
-        transactionsLast24h: last24h,
-        errorsLast24h,
-        totalGasCostEth,
-        successRate: transactions.length + errors.length > 0 ? Math.round(
-          transactions.length / (transactions.length + errors.length) * 100
-        ) : 100
-      }
+      message: "Login for full health stats"
     };
-  } catch (error) {
-    throw createError$1({
-      statusCode: 500,
-      message: "Health check failed"
-    });
   }
+  return proxyToPetter(event, "/api/health", { method: "GET" });
 });
 
 const health_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3061,31 +2446,10 @@ const health_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const petterBalance_get = defineEventHandler$1(async (event) => {
-  var _a, _b;
-  const config = useRuntimeConfig();
-  const balanceAddr = config.petterBalanceAddress || ((_a = config.public) == null ? void 0 : _a.petterBalanceAddress) || "";
-  const addr = balanceAddr.trim() || config.petterAddress;
-  if (!addr || typeof addr !== "string" || !addr.startsWith("0x")) {
-    return { balance: "0", address: config.petterAddress, balanceAddress: null };
+  if (!checkAuth(event)) {
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  try {
-    const rpcUrl = config.baseRpcUrl || "https://mainnet.base.org";
-    const client = createPublicClient({
-      chain: base,
-      transport: http(rpcUrl)
-    });
-    const balance = await client.getBalance({ address: addr });
-    const eth = parseFloat(formatEther(balance)).toFixed(4);
-    const balAddr = config.petterBalanceAddress || ((_b = config.public) == null ? void 0 : _b.petterBalanceAddress) || "";
-    return {
-      balance: eth,
-      address: config.petterAddress,
-      balanceAddress: balAddr.trim() || null
-    };
-  } catch (err) {
-    console.error("[petter-balance]", err);
-    throw createError$1({ statusCode: 500, message: "Failed to fetch balance" });
-  }
+  return proxyToPetter(event, "/api/petter-balance", { method: "GET" });
 });
 
 const petterBalance_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3094,53 +2458,10 @@ const petterBalance_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defin
 }, Symbol.toStringTag, { value: 'Module' }));
 
 const stats_get = defineEventHandler$1(async (event) => {
-  var _a, _b, _c;
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const [transactions, errors, state] = await Promise.all([
-    getTransactions(100),
-    getErrors(100),
-    getBotState()
-  ]);
-  const totalPetted = transactions.reduce((sum, tx) => sum + tx.tokenIds.length, 0);
-  const last24h = transactions.filter(
-    (tx) => Date.now() - tx.timestamp < 24 * 60 * 60 * 1e3
-  );
-  const last7d = transactions.filter(
-    (tx) => Date.now() - tx.timestamp < 7 * 24 * 60 * 60 * 1e3
-  );
-  const totalGasCostWei = transactions.reduce((sum, tx) => {
-    const wei = tx.gasCostWei ? BigInt(tx.gasCostWei) : /* @__PURE__ */ BigInt("0");
-    return sum + wei;
-  }, /* @__PURE__ */ BigInt("0"));
-  const totalGasCostEth = Number(totalGasCostWei) / 1e18;
-  return {
-    bot: {
-      running: (_a = state == null ? void 0 : state.running) != null ? _a : false,
-      lastRun: (_b = state == null ? void 0 : state.lastRun) != null ? _b : null,
-      lastError: (_c = state == null ? void 0 : state.lastError) != null ? _c : null
-    },
-    transactions: {
-      total: transactions.length,
-      last24h: last24h.length,
-      last7d: last7d.length,
-      totalAavegotchisPetted: totalPetted,
-      totalGasCostEth
-    },
-    errors: {
-      total: errors.length,
-      last24h: errors.filter(
-        (e) => Date.now() - e.timestamp < 24 * 60 * 60 * 1e3
-      ).length
-    },
-    successRate: transactions.length + errors.length > 0 ? Math.round(
-      transactions.length / (transactions.length + errors.length) * 100
-    ) : 100
-  };
+  return proxyToPetter(event, "/api/stats", { method: "GET" });
 });
 
 const stats_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3150,26 +2471,13 @@ const stats_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.definePropert
 
 const _hash__get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
   const hash = getRouterParam$1(event, "hash");
   if (!hash) {
-    throw createError$1({
-      statusCode: 400,
-      message: "Transaction hash required"
-    });
+    throw createError$1({ statusCode: 400, message: "Transaction hash required" });
   }
-  const transaction = await getTransaction(hash);
-  if (!transaction) {
-    throw createError$1({
-      statusCode: 404,
-      message: "Transaction not found"
-    });
-  }
-  return transaction;
+  return proxyToPetter(event, `/api/transactions/${hash}`, { method: "GET" });
 });
 
 const _hash__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3177,57 +2485,11 @@ const _hash__get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
   default: _hash__get
 }, Symbol.toStringTag, { value: 'Module' }));
 
-async function fetchReceipt(rpcUrl, txHash) {
-  var _a;
-  const res = await fetch(rpcUrl, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      jsonrpc: "2.0",
-      id: 1,
-      method: "eth_getTransactionReceipt",
-      params: [txHash]
-    })
-  });
-  const data = await res.json();
-  return (_a = data.result) != null ? _a : null;
-}
 const backfillGas_post = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const config = useRuntimeConfig();
-  const rpcUrl = config.baseRpcUrl || process.env.BASE_RPC_URL || "https://mainnet.base.org";
-  const transactions = await getTransactions(100);
-  const needsBackfill = transactions.filter((t) => !t.gasCostWei);
-  if (needsBackfill.length === 0) {
-    return { ok: true, updated: 0, message: "All transactions already have gas cost" };
-  }
-  const updated = [...transactions];
-  let updatedCount = 0;
-  for (let i = 0; i < updated.length; i++) {
-    const tx = updated[i];
-    if (tx.gasCostWei) continue;
-    try {
-      const receipt = await fetchReceipt(rpcUrl, tx.hash);
-      if (!(receipt == null ? void 0 : receipt.gasUsed)) continue;
-      const gasUsed = BigInt(receipt.gasUsed);
-      const gasPrice = receipt.effectiveGasPrice ? BigInt(receipt.effectiveGasPrice) : receipt.gasPrice ? BigInt(receipt.gasPrice) : /* @__PURE__ */ BigInt("0");
-      if (gasPrice > /* @__PURE__ */ BigInt("0")) {
-        updated[i] = { ...tx, gasCostWei: (gasUsed * gasPrice).toString() };
-        updatedCount++;
-      }
-    } catch (err) {
-      console.error(`[backfill-gas] Failed to fetch receipt for ${tx.hash}:`, err);
-    }
-  }
-  if (updatedCount > 0) {
-    await setTransactions(updated);
-  }
-  return { ok: true, updated: updatedCount, total: transactions.length };
+  return proxyToPetter(event, "/api/transactions/backfill-gas", { method: "POST" });
 });
 
 const backfillGas_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3235,23 +2497,11 @@ const backfillGas_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.define
   default: backfillGas_post
 }, Symbol.toStringTag, { value: 'Module' }));
 
-function checkClearAuth(event) {
-  if (checkAuth(event)) return true;
-  const config = useRuntimeConfig();
-  const secret = config.reportSecret || process.env.REPORT_SECRET;
-  if (!secret) return false;
-  const header = getHeader(event, "x-report-secret");
-  return header === secret;
-}
 const clear_post = defineEventHandler$1(async (event) => {
-  if (!checkClearAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+  if (!checkAuth(event)) {
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  await Promise.all([clearTransactions(), clearManualTriggerLogs()]);
-  return { success: true, message: "Execution history cleared" };
+  return proxyToPetter(event, "/api/transactions/clear", { method: "POST" });
 });
 
 const clear_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
@@ -3261,37 +2511,9 @@ const clear_post$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProper
 
 const index_get = defineEventHandler$1(async (event) => {
   if (!checkAuth(event)) {
-    throw createError$1({
-      statusCode: 401,
-      message: "Unauthorized"
-    });
+    throw createError$1({ statusCode: 401, message: "Unauthorized" });
   }
-  const query = getQuery$1(event);
-  const limit = query.limit ? parseInt(query.limit) : 50;
-  const [transactions, manualLogs] = await Promise.all([
-    getTransactions(limit),
-    getManualTriggerLogs(limit)
-  ]);
-  const entries = [
-    ...transactions.map((t) => ({
-      type: "transaction",
-      hash: t.hash,
-      timestamp: t.timestamp,
-      blockNumber: t.blockNumber,
-      gasUsed: t.gasUsed,
-      gasCostWei: t.gasCostWei,
-      tokenIds: t.tokenIds
-    })),
-    ...manualLogs.map((m) => ({
-      type: "manual",
-      id: m.id,
-      timestamp: m.timestamp,
-      message: m.message,
-      petted: m.petted
-    }))
-  ];
-  entries.sort((a, b) => b.timestamp - a.timestamp);
-  return entries.slice(0, limit);
+  return proxyToPetter(event, "/api/transactions", { method: "GET" });
 });
 
 const index_get$1 = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({

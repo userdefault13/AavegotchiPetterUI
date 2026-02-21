@@ -1,27 +1,19 @@
 import { getCookie } from 'h3'
-import { removeDelegatedOwner, checkAuth } from '~/lib'
+import { proxyToPetter } from '~/server/utils/petterProxy'
+import { checkAuth } from '~/lib/auth'
 
 export default defineEventHandler(async (event) => {
   if (!checkAuth(event)) {
-    throw createError({
-      statusCode: 401,
-      message: 'Unauthorized',
-    })
+    throw createError({ statusCode: 401, message: 'Unauthorized' })
   }
 
   const session = getCookie(event, 'auth_session') as string | undefined
   if (!session) {
-    throw createError({
-      statusCode: 401,
-      message: 'Not authenticated',
-    })
+    throw createError({ statusCode: 401, message: 'Not authenticated' })
   }
 
-  const ownerAddress = session.toLowerCase()
-  await removeDelegatedOwner(ownerAddress)
-
-  return {
-    success: true,
-    message: 'Unregistered from auto-petting. Revoke on-chain to fully remove the petter.',
-  }
+  return proxyToPetter(event, '/api/delegation/unregister', {
+    method: 'POST',
+    body: { ownerAddress: session.toLowerCase() },
+  })
 })

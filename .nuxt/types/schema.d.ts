@@ -77,27 +77,21 @@ declare module 'nuxt/schema' {
       cdnURL: string,
    },
 
-   kvRestApiUrl: string,
+   petterApiUrl: string,
 
-   kvRestApiToken: string,
+   petterApiSecret: string,
 
    allowedAddress: string,
 
    allowedAddresses: string,
 
-   reportSecret: string,
-
    petterAddress: string,
 
    baseRpcUrl: string,
 
-   petterPrivateKey: string,
-
-   workerUrl: string,
+   petterBalanceAddress: string,
 
    workerEnabled: boolean,
-
-   petterBalanceAddress: string,
 
    nitro: {
       envPrefix: string,
