@@ -5,8 +5,6 @@
  * Always returns 200 with JSON so client gets real error messages (Vercel replaces 500 body).
  */
 import { checkAuth } from '~/lib/auth'
-import { addManualTriggerLog } from '~/lib/kv'
-import { runPetting } from '~/lib/pet'
 
 function toErrorMsg(err: unknown): string {
   if (err instanceof Error) return err.message
@@ -48,6 +46,10 @@ export default defineEventHandler(async (event) => {
     } catch {
       /* empty body ok */
     }
+
+    // Dynamic import to catch load-time failures (viem, kv) and return 200 with error
+    const { runPetting } = await import('~/lib/pet')
+    const { addManualTriggerLog } = await import('~/lib/kv')
 
     const result = await runPetting({
       force: body?.force !== false,
