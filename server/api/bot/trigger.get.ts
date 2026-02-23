@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
       petterUrl: petterUrl.slice(0, 50) + '...',
       hasSecret,
       petterOk,
-      petterAddress: config.petterAddress || '0x9a3E95f448f3daB367dd9213D4554444faa272F1',
+      petterAddress: config.petterAddress || '',
       baseRpcUrl: (config.baseRpcUrl || 'https://mainnet.base.org').slice(0, 50) + '...',
       readyToTrigger: hasSecret && petterOk,
       issues: issues.length > 0 ? issues : null,

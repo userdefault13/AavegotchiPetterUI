@@ -2,7 +2,10 @@ import { verifyMessage } from 'viem'
 import { getCookie, setCookie, deleteCookie } from 'h3'
 import { ensureRawAddress } from './address'
 
-const DEFAULT_ALLOWED = '0x2127aa7265d573aa467f1d73554d17890b872e76'.toLowerCase()
+function getDefaultAllowed(): string {
+  const fromEnv = process.env.ALLOWED_ADDRESS?.trim()
+  return (fromEnv || '').toLowerCase()
+}
 
 function parseAllowedAddresses(allowedAddress?: string, allowedAddresses?: string): string[] {
   if (allowedAddresses) {
@@ -14,7 +17,8 @@ function parseAllowedAddresses(allowedAddress?: string, allowedAddresses?: strin
   if (allowedAddress) {
     return [allowedAddress.toLowerCase()]
   }
-  return [DEFAULT_ALLOWED]
+  const def = getDefaultAllowed()
+  return def ? [def] : []
 }
 
 export function isAddressAllowed(
@@ -51,7 +55,8 @@ export function createSession(event: any, address: string): void {
   setCookie(event, 'auth_session', rawAddr, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    path: '/',
     maxAge: 60 * 60 * 24 * 7,
   })
 }
@@ -83,10 +88,11 @@ export function checkAuth(
   if (!allowed && !allowedList) {
     try {
       const config = useRuntimeConfig()
-      allowed = config.allowedAddress
-      allowedList = config.allowedAddresses
+      allowed = (config.allowedAddress || process.env.ALLOWED_ADDRESS || '').toString().trim()
+      allowedList = (config.allowedAddresses || process.env.ALLOWED_ADDRESSES || '').toString().trim()
     } catch {
-      allowed = DEFAULT_ALLOWED
+      allowed = (process.env.ALLOWED_ADDRESS || '').toString().trim()
+      allowedList = (process.env.ALLOWED_ADDRESSES || '').toString().trim()
     }
   }
   const session = getCookie(event, 'auth_session')

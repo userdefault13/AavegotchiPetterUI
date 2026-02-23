@@ -1,45 +1,45 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestURL, getRequestHeader as getRequestHeader$1, getResponseHeader, getRequestHeaders as getRequestHeaders$1, setResponseHeaders as setResponseHeaders$1, setResponseStatus as setResponseStatus$1, send as send$1, appendResponseHeader as appendResponseHeader$1, removeResponseHeader, createError, setResponseHeader as setResponseHeader$1, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readBody as readBody$1, getQuery as getQuery$2 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestURL, getRequestHeader as getRequestHeader$1, getResponseHeader, getRequestHeaders as getRequestHeaders$1, setResponseHeaders as setResponseHeaders$1, setResponseStatus as setResponseStatus$1, send as send$1, appendResponseHeader as appendResponseHeader$1, removeResponseHeader, createError, setResponseHeader as setResponseHeader$1, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getResponseStatus, getRouterParam, readBody as readBody$1, getQuery as getQuery$2 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
-import { escapeHtml } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/@vue/shared/dist/shared.cjs.js';
-import { getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, defineEventHandler as defineEventHandler$1, getQuery as getQuery$1, readBody, getCookie, deleteCookie, setCookie, createError as createError$1, getMethod, getHeader, getRouterParam as getRouterParam$1, getResponseStatusText, getResponseStatus as getResponseStatus$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/h3/dist/index.mjs';
-import { isAddress, verifyMessage } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/viem/_esm/index.js';
-import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/ufo/dist/index.mjs';
-import { renderToString } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/vue/server-renderer/index.mjs';
-import destr, { destr as destr$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/destr/dist/index.mjs';
-import { createHooks } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/ofetch/dist/node.mjs';
-import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/node-mock-http/dist/index.mjs';
-import { prefixStorage } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/unstorage/dist/index.mjs';
-import { createStorage } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/unstorage/drivers/fs.mjs';
-import { digest } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/ohash/dist/index.mjs';
-import { klona } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/defu/dist/defu.mjs';
-import { snakeCase } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/scule/dist/index.mjs';
-import { getContext } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/unctx/dist/index.mjs';
-import { toRouteMatcher, createRouter } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/radix3/dist/index.mjs';
+import { escapeHtml } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/@vue/shared/dist/shared.cjs.js';
+import { getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, defineEventHandler as defineEventHandler$1, getQuery as getQuery$1, readBody, getCookie, deleteCookie, setCookie, createError as createError$1, getMethod, getHeader, getRouterParam as getRouterParam$1, getResponseStatusText, getResponseStatus as getResponseStatus$1 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/h3/dist/index.mjs';
+import { isAddress, verifyMessage } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/viem/_esm/index.js';
+import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/ufo/dist/index.mjs';
+import { renderToString } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/vue/server-renderer/index.mjs';
+import destr, { destr as destr$1 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/destr/dist/index.mjs';
+import { createHooks } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/hookable/dist/index.mjs';
+import { createFetch, Headers as Headers$1 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/ofetch/dist/node.mjs';
+import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/node-mock-http/dist/index.mjs';
+import { prefixStorage } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/unstorage/dist/index.mjs';
+import { createStorage } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nuxt/node_modules/unstorage/drivers/fs.mjs';
+import { digest } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/ohash/dist/index.mjs';
+import { klona } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/klona/dist/index.mjs';
+import defu, { defuFn } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/defu/dist/defu.mjs';
+import { snakeCase } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/scule/dist/index.mjs';
+import { getContext } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/unctx/dist/index.mjs';
+import { toRouteMatcher, createRouter } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/radix3/dist/index.mjs';
 import { readFile } from 'node:fs/promises';
-import consola, { consola as consola$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/consola/dist/index.mjs';
-import { ErrorParser } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/youch-core/build/index.js';
-import { Youch } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/youch/build/index.js';
-import { SourceMapConsumer } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/source-map/source-map.js';
+import consola, { consola as consola$1 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/consola/dist/index.mjs';
+import { ErrorParser } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/youch-core/build/index.js';
+import { Youch } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/nitropack/node_modules/youch/build/index.js';
+import { SourceMapConsumer } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/source-map/source-map.js';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { stringify, uneval } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/devalue/index.js';
-import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/errx/dist/index.js';
-import { isVNode, isRef, toValue } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/vue/index.mjs';
+import { stringify, uneval } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/devalue/index.js';
+import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/errx/dist/index.js';
+import { isVNode, isRef, toValue } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/vue/index.mjs';
 import { promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/pathe/dist/index.mjs';
-import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/unhead/dist/server.mjs';
-import { DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/unhead/dist/plugins.mjs';
-import { walkResolver } from 'file:///Users/juliuswong/Dev/AavegotchiPetterUI/node_modules/unhead/dist/utils.mjs';
+import { dirname as dirname$1, resolve as resolve$1 } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/pathe/dist/index.mjs';
+import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/unhead/dist/server.mjs';
+import { DeprecationsPlugin, PromisesPlugin, TemplateParamsPlugin, AliasSortingPlugin } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/unhead/dist/plugins.mjs';
+import { walkResolver } from 'file:///Users/juliuswong/dev/AavegotchiPetterUI/node_modules/unhead/dist/utils.mjs';
 
-const serverAssets = [{"baseName":"server","dir":"/Users/juliuswong/Dev/AavegotchiPetterUI/server/assets"}];
+const serverAssets = [{"baseName":"server","dir":"/Users/juliuswong/dev/AavegotchiPetterUI/server/assets"}];
 
 const assets$1 = createStorage();
 
@@ -51,11 +51,11 @@ const storage = createStorage({});
 
 storage.mount('/assets', assets$1);
 
-storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/juliuswong/Dev/AavegotchiPetterUI","watchOptions":{"ignored":[null]}}));
-storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/juliuswong/Dev/AavegotchiPetterUI/server","watchOptions":{"ignored":[null]}}));
-storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/juliuswong/Dev/AavegotchiPetterUI/.nuxt"}));
-storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/juliuswong/Dev/AavegotchiPetterUI/.nuxt/cache"}));
-storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/Users/juliuswong/Dev/AavegotchiPetterUI/.data/kv"}));
+storage.mount('root', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/juliuswong/dev/AavegotchiPetterUI","watchOptions":{"ignored":[null]}}));
+storage.mount('src', unstorage_47drivers_47fs({"driver":"fs","readOnly":true,"base":"/Users/juliuswong/dev/AavegotchiPetterUI/server","watchOptions":{"ignored":[null]}}));
+storage.mount('build', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/juliuswong/dev/AavegotchiPetterUI/.nuxt"}));
+storage.mount('cache', unstorage_47drivers_47fs({"driver":"fs","readOnly":false,"base":"/Users/juliuswong/dev/AavegotchiPetterUI/.nuxt/cache"}));
+storage.mount('data', unstorage_47drivers_47fs({"driver":"fs","base":"/Users/juliuswong/dev/AavegotchiPetterUI/.data/kv"}));
 
 function useStorage(base = "") {
   return base ? prefixStorage(storage, base) : storage;
@@ -651,18 +651,18 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
+    "allowedAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
     "allowedAddresses": "",
     "baseRpcUrl": "https://mainnet.base.org",
-    "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
+    "petterAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
     "petterBalanceAddress": "",
     "workerEnabled": true
   },
-  "petterApiUrl": "http://localhost:3001",
+  "petterApiUrl": "http://localhost:3002",
   "petterApiSecret": "67bee49be8fd7a6ee0b35a933ae5a12ff34861c700a3d09609622c939a0de245",
-  "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
+  "allowedAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
   "allowedAddresses": "",
-  "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
+  "petterAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
   "baseRpcUrl": "https://mainnet.base.org",
   "petterBalanceAddress": "",
   "workerEnabled": true
@@ -1035,13 +1035,13 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _9NmxAD5FWL0ga97574SYDSNjPcwkqrEABAh24JUhkI = (function(nitro) {
+const _ezYvaT9Zb51yMTJqBZJT_Hb1Fx36_Og_THyvHsdhelI = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
 });
 
-const rootDir = "/Users/juliuswong/Dev/AavegotchiPetterUI";
+const rootDir = "/Users/juliuswong/dev/AavegotchiPetterUI";
 
 const appHead = {"meta":[{"name":"viewport","content":"width=device-width, initial-scale=1"},{"charset":"utf-8"}],"link":[],"style":[],"script":[],"noscript":[]};
 
@@ -1060,7 +1060,7 @@ const devReducers = {
   URL: (data) => data instanceof URL ? data.toString() : void 0
 };
 const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _ozVvUOkFbyWFms44qWX5rd49M6pok_PqaAdrXsaUQrU = (nitroApp) => {
+const _GEyN0R68jxVa6j31WYDrd9zkrenEzHWnd8qlzGR5U70 = (nitroApp) => {
   const handler = nitroApp.h3App.handler;
   nitroApp.h3App.handler = (event) => {
     return asyncContext.callAsync({ logs: [], event }, () => handler(event));
@@ -1130,26 +1130,11 @@ function onConsoleLog(callback) {
 }
 
 const plugins = [
-  _9NmxAD5FWL0ga97574SYDSNjPcwkqrEABAh24JUhkI,
-_ozVvUOkFbyWFms44qWX5rd49M6pok_PqaAdrXsaUQrU
+  _ezYvaT9Zb51yMTJqBZJT_Hb1Fx36_Og_THyvHsdhelI,
+_GEyN0R68jxVa6j31WYDrd9zkrenEzHWnd8qlzGR5U70
 ];
 
-const assets = {
-  "/index.mjs": {
-    "type": "text/javascript; charset=utf-8",
-    "etag": "\"18ba9-emcdonqf4QMVPdDO92iZOGB64Oc\"",
-    "mtime": "2026-02-21T17:25:42.340Z",
-    "size": 101289,
-    "path": "index.mjs"
-  },
-  "/index.mjs.map": {
-    "type": "application/json",
-    "etag": "\"54e30-18DcAOolykd2sJaJ7wh4n6L5ccg\"",
-    "mtime": "2026-02-21T17:25:42.340Z",
-    "size": 347696,
-    "path": "index.mjs.map"
-  }
-};
+const assets = {};
 
 function readAsset (id) {
   const serverDir = dirname$1(fileURLToPath(import.meta.url));
@@ -1174,7 +1159,7 @@ function getAsset (id) {
 
 const METHODS = /* @__PURE__ */ new Set(["HEAD", "GET"]);
 const EncodingMap = { gzip: ".gz", br: ".br" };
-const _GrHKKP = eventHandler((event) => {
+const _rL8S05 = eventHandler((event) => {
   if (event.method && !METHODS.has(event.method)) {
     return;
   }
@@ -1312,8 +1297,8 @@ function publicAssetsURL(...path) {
 
 const APP_ROOT_OPEN_TAG = `<${appRootTag}${propsToString(appRootAttrs)}>`;
 const APP_ROOT_CLOSE_TAG = `</${appRootTag}>`;
-const getServerEntry = () => import('file:///Users/juliuswong/Dev/AavegotchiPetterUI/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
-const getClientManifest = () => import('file:///Users/juliuswong/Dev/AavegotchiPetterUI/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
+const getServerEntry = () => import('file:///Users/juliuswong/dev/AavegotchiPetterUI/.nuxt/dist/server/server.mjs').then((r) => r.default || r);
+const getClientManifest = () => import('file:///Users/juliuswong/dev/AavegotchiPetterUI/.nuxt/dist/server/client.manifest.mjs').then((r) => r.default || r).then((r) => typeof r === "function" ? r() : r);
 const getSSRRenderer = lazyCachedFunction(async () => {
   const manifest = await getClientManifest();
   if (!manifest) {
@@ -1559,71 +1544,71 @@ async function getIslandContext(event) {
   return ctx;
 }
 
-const _lazy_pVl8he = () => Promise.resolve().then(function () { return check_get$1; });
-const _lazy_ZvWudR = () => Promise.resolve().then(function () { return logout_post$1; });
-const _lazy_LMDnN5 = () => Promise.resolve().then(function () { return me_get$1; });
-const _lazy_ucSKS7 = () => Promise.resolve().then(function () { return verify_post$1; });
-const _lazy_9LFQow = () => Promise.resolve().then(function () { return config_get$1; });
-const _lazy_tzHLNN = () => Promise.resolve().then(function () { return frequency_get$1; });
-const _lazy_JjSPcC = () => Promise.resolve().then(function () { return frequency_post$1; });
-const _lazy_r9J2XF = () => Promise.resolve().then(function () { return logs_get$1; });
-const _lazy_OrOcxI = () => Promise.resolve().then(function () { return run_post$1; });
-const _lazy_ObhiuS = () => Promise.resolve().then(function () { return start_post$1; });
-const _lazy_ZgUbvc = () => Promise.resolve().then(function () { return status_get$1; });
-const _lazy_lqiQgb = () => Promise.resolve().then(function () { return stop_post$1; });
-const _lazy_r9zscl = () => Promise.resolve().then(function () { return trigger_get$1; });
-const _lazy_U2NEtV = () => Promise.resolve().then(function () { return trigger_post$1; });
-const _lazy_7wM_sm = () => Promise.resolve().then(function () { return delegatedOwners_get$1; });
-const _lazy_2O16zh = () => Promise.resolve().then(function () { return clearAll_post$1; });
-const _lazy_6lH6On = () => Promise.resolve().then(function () { return owners_get$1; });
-const _lazy_66rZ8b = () => Promise.resolve().then(function () { return register_post$1; });
-const _lazy_bQA76k = () => Promise.resolve().then(function () { return registered_get$1; });
-const _lazy_sNPHMm = () => Promise.resolve().then(function () { return unregister_post$1; });
-const _lazy_KSwdmL = () => Promise.resolve().then(function () { return clear_post$3; });
-const _lazy_3JRcxT = () => Promise.resolve().then(function () { return index_get$3; });
-const _lazy_dTMlQs = () => Promise.resolve().then(function () { return health_get$1; });
-const _lazy_IKyWGN = () => Promise.resolve().then(function () { return petterBalance_get$1; });
-const _lazy_5fu4XE = () => Promise.resolve().then(function () { return stats_get$1; });
-const _lazy_s9pQ73 = () => Promise.resolve().then(function () { return _hash__get$1; });
-const _lazy_CYtH6M = () => Promise.resolve().then(function () { return backfillGas_post$1; });
-const _lazy_ASjYXG = () => Promise.resolve().then(function () { return clear_post$1; });
-const _lazy_POYyUs = () => Promise.resolve().then(function () { return index_get$1; });
-const _lazy_GxqLoo = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_Q0sQHB = () => Promise.resolve().then(function () { return check_get$1; });
+const _lazy_VsfiEV = () => Promise.resolve().then(function () { return logout_post$1; });
+const _lazy_g4e4_9 = () => Promise.resolve().then(function () { return me_get$1; });
+const _lazy_tfB9nH = () => Promise.resolve().then(function () { return verify_post$1; });
+const _lazy_i94pWo = () => Promise.resolve().then(function () { return config_get$1; });
+const _lazy_UCe9Sc = () => Promise.resolve().then(function () { return frequency_get$1; });
+const _lazy_QS_dcg = () => Promise.resolve().then(function () { return frequency_post$1; });
+const _lazy_itgtK1 = () => Promise.resolve().then(function () { return logs_get$1; });
+const _lazy_K7tMhF = () => Promise.resolve().then(function () { return run_post$1; });
+const _lazy_86tlRF = () => Promise.resolve().then(function () { return start_post$1; });
+const _lazy_dHeJS0 = () => Promise.resolve().then(function () { return status_get$1; });
+const _lazy_e6uF7x = () => Promise.resolve().then(function () { return stop_post$1; });
+const _lazy_2SzJL5 = () => Promise.resolve().then(function () { return trigger_get$1; });
+const _lazy_OOO6Fy = () => Promise.resolve().then(function () { return trigger_post$1; });
+const _lazy_Zb5uaL = () => Promise.resolve().then(function () { return delegatedOwners_get$1; });
+const _lazy_DsKkuX = () => Promise.resolve().then(function () { return clearAll_post$1; });
+const _lazy_nqjvyE = () => Promise.resolve().then(function () { return owners_get$1; });
+const _lazy_Vs63ij = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_mq4Vac = () => Promise.resolve().then(function () { return registered_get$1; });
+const _lazy_xWHt1B = () => Promise.resolve().then(function () { return unregister_post$1; });
+const _lazy_6Mje8A = () => Promise.resolve().then(function () { return clear_post$3; });
+const _lazy_qgvEZR = () => Promise.resolve().then(function () { return index_get$3; });
+const _lazy_pV34PO = () => Promise.resolve().then(function () { return health_get$1; });
+const _lazy_UMBQKV = () => Promise.resolve().then(function () { return petterBalance_get$1; });
+const _lazy_Lpy72W = () => Promise.resolve().then(function () { return stats_get$1; });
+const _lazy_pmwcwt = () => Promise.resolve().then(function () { return _hash__get$1; });
+const _lazy_eou43m = () => Promise.resolve().then(function () { return backfillGas_post$1; });
+const _lazy_N_37fo = () => Promise.resolve().then(function () { return clear_post$1; });
+const _lazy_klTyM_ = () => Promise.resolve().then(function () { return index_get$1; });
+const _lazy_4YCjBa = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '', handler: _GrHKKP, lazy: false, middleware: true, method: undefined },
-  { route: '/api/auth/check', handler: _lazy_pVl8he, lazy: true, middleware: false, method: "get" },
-  { route: '/api/auth/logout', handler: _lazy_ZvWudR, lazy: true, middleware: false, method: "post" },
-  { route: '/api/auth/me', handler: _lazy_LMDnN5, lazy: true, middleware: false, method: "get" },
-  { route: '/api/auth/verify', handler: _lazy_ucSKS7, lazy: true, middleware: false, method: "post" },
-  { route: '/api/bot/config', handler: _lazy_9LFQow, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/frequency', handler: _lazy_tzHLNN, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/frequency', handler: _lazy_JjSPcC, lazy: true, middleware: false, method: "post" },
-  { route: '/api/bot/logs', handler: _lazy_r9J2XF, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/run', handler: _lazy_OrOcxI, lazy: true, middleware: false, method: "post" },
-  { route: '/api/bot/start', handler: _lazy_ObhiuS, lazy: true, middleware: false, method: "post" },
-  { route: '/api/bot/status', handler: _lazy_ZgUbvc, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/stop', handler: _lazy_lqiQgb, lazy: true, middleware: false, method: "post" },
-  { route: '/api/bot/trigger', handler: _lazy_r9zscl, lazy: true, middleware: false, method: "get" },
-  { route: '/api/bot/trigger', handler: _lazy_U2NEtV, lazy: true, middleware: false, method: "post" },
-  { route: '/api/delegated-owners', handler: _lazy_7wM_sm, lazy: true, middleware: false, method: "get" },
-  { route: '/api/delegation/clear-all', handler: _lazy_2O16zh, lazy: true, middleware: false, method: "post" },
-  { route: '/api/delegation/owners', handler: _lazy_6lH6On, lazy: true, middleware: false, method: "get" },
-  { route: '/api/delegation/register', handler: _lazy_66rZ8b, lazy: true, middleware: false, method: "post" },
-  { route: '/api/delegation/registered', handler: _lazy_bQA76k, lazy: true, middleware: false, method: "get" },
-  { route: '/api/delegation/unregister', handler: _lazy_sNPHMm, lazy: true, middleware: false, method: "post" },
-  { route: '/api/errors/clear', handler: _lazy_KSwdmL, lazy: true, middleware: false, method: "post" },
-  { route: '/api/errors', handler: _lazy_3JRcxT, lazy: true, middleware: false, method: "get" },
-  { route: '/api/health', handler: _lazy_dTMlQs, lazy: true, middleware: false, method: "get" },
-  { route: '/api/petter-balance', handler: _lazy_IKyWGN, lazy: true, middleware: false, method: "get" },
-  { route: '/api/stats', handler: _lazy_5fu4XE, lazy: true, middleware: false, method: "get" },
-  { route: '/api/transactions/:hash', handler: _lazy_s9pQ73, lazy: true, middleware: false, method: "get" },
-  { route: '/api/transactions/backfill-gas', handler: _lazy_CYtH6M, lazy: true, middleware: false, method: "post" },
-  { route: '/api/transactions/clear', handler: _lazy_ASjYXG, lazy: true, middleware: false, method: "post" },
-  { route: '/api/transactions', handler: _lazy_POYyUs, lazy: true, middleware: false, method: "get" },
-  { route: '/__nuxt_error', handler: _lazy_GxqLoo, lazy: true, middleware: false, method: undefined },
+  { route: '', handler: _rL8S05, lazy: false, middleware: true, method: undefined },
+  { route: '/api/auth/check', handler: _lazy_Q0sQHB, lazy: true, middleware: false, method: "get" },
+  { route: '/api/auth/logout', handler: _lazy_VsfiEV, lazy: true, middleware: false, method: "post" },
+  { route: '/api/auth/me', handler: _lazy_g4e4_9, lazy: true, middleware: false, method: "get" },
+  { route: '/api/auth/verify', handler: _lazy_tfB9nH, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/config', handler: _lazy_i94pWo, lazy: true, middleware: false, method: "get" },
+  { route: '/api/bot/frequency', handler: _lazy_UCe9Sc, lazy: true, middleware: false, method: "get" },
+  { route: '/api/bot/frequency', handler: _lazy_QS_dcg, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/logs', handler: _lazy_itgtK1, lazy: true, middleware: false, method: "get" },
+  { route: '/api/bot/run', handler: _lazy_K7tMhF, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/start', handler: _lazy_86tlRF, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/status', handler: _lazy_dHeJS0, lazy: true, middleware: false, method: "get" },
+  { route: '/api/bot/stop', handler: _lazy_e6uF7x, lazy: true, middleware: false, method: "post" },
+  { route: '/api/bot/trigger', handler: _lazy_2SzJL5, lazy: true, middleware: false, method: "get" },
+  { route: '/api/bot/trigger', handler: _lazy_OOO6Fy, lazy: true, middleware: false, method: "post" },
+  { route: '/api/delegated-owners', handler: _lazy_Zb5uaL, lazy: true, middleware: false, method: "get" },
+  { route: '/api/delegation/clear-all', handler: _lazy_DsKkuX, lazy: true, middleware: false, method: "post" },
+  { route: '/api/delegation/owners', handler: _lazy_nqjvyE, lazy: true, middleware: false, method: "get" },
+  { route: '/api/delegation/register', handler: _lazy_Vs63ij, lazy: true, middleware: false, method: "post" },
+  { route: '/api/delegation/registered', handler: _lazy_mq4Vac, lazy: true, middleware: false, method: "get" },
+  { route: '/api/delegation/unregister', handler: _lazy_xWHt1B, lazy: true, middleware: false, method: "post" },
+  { route: '/api/errors/clear', handler: _lazy_6Mje8A, lazy: true, middleware: false, method: "post" },
+  { route: '/api/errors', handler: _lazy_qgvEZR, lazy: true, middleware: false, method: "get" },
+  { route: '/api/health', handler: _lazy_pV34PO, lazy: true, middleware: false, method: "get" },
+  { route: '/api/petter-balance', handler: _lazy_UMBQKV, lazy: true, middleware: false, method: "get" },
+  { route: '/api/stats', handler: _lazy_Lpy72W, lazy: true, middleware: false, method: "get" },
+  { route: '/api/transactions/:hash', handler: _lazy_pmwcwt, lazy: true, middleware: false, method: "get" },
+  { route: '/api/transactions/backfill-gas', handler: _lazy_eou43m, lazy: true, middleware: false, method: "post" },
+  { route: '/api/transactions/clear', handler: _lazy_N_37fo, lazy: true, middleware: false, method: "post" },
+  { route: '/api/transactions', handler: _lazy_klTyM_, lazy: true, middleware: false, method: "get" },
+  { route: '/__nuxt_error', handler: _lazy_4YCjBa, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_GxqLoo, lazy: true, middleware: false, method: undefined }
+  { route: '/**', handler: _lazy_4YCjBa, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -1965,7 +1950,10 @@ function ensureRawAddress(value) {
   return trimmed;
 }
 
-const DEFAULT_ALLOWED = "0x2127aa7265d573aa467f1d73554d17890b872e76".toLowerCase();
+function getDefaultAllowed() {
+  const fromEnv = process.env.ALLOWED_ADDRESS?.trim();
+  return (fromEnv || "").toLowerCase();
+}
 function parseAllowedAddresses(allowedAddress, allowedAddresses) {
   if (allowedAddresses) {
     return allowedAddresses.split(",").map((a) => a.trim().toLowerCase()).filter(Boolean);
@@ -1973,7 +1961,8 @@ function parseAllowedAddresses(allowedAddress, allowedAddresses) {
   if (allowedAddress) {
     return [allowedAddress.toLowerCase()];
   }
-  return [DEFAULT_ALLOWED];
+  const def = getDefaultAllowed();
+  return def ? [def] : [];
 }
 function isAddressAllowed(address, allowedAddress, allowedAddresses) {
   const list = parseAllowedAddresses(allowedAddress, allowedAddresses);
@@ -1997,7 +1986,8 @@ function createSession(event, address) {
   setCookie(event, "auth_session", rawAddr, {
     httpOnly: true,
     secure: false,
-    sameSite: "strict",
+    sameSite: "lax",
+    path: "/",
     maxAge: 60 * 60 * 24 * 7
   });
 }
@@ -2010,10 +2000,11 @@ function checkAuth(event, allowedAddress, allowedAddresses) {
   if (!allowed && !allowedList) {
     try {
       const config = useRuntimeConfig();
-      allowed = config.allowedAddress;
-      allowedList = config.allowedAddresses;
+      allowed = (config.allowedAddress || process.env.ALLOWED_ADDRESS || "").toString().trim();
+      allowedList = (config.allowedAddresses || process.env.ALLOWED_ADDRESSES || "").toString().trim();
     } catch {
-      allowed = DEFAULT_ALLOWED;
+      allowed = (process.env.ALLOWED_ADDRESS || "").toString().trim();
+      allowedList = (process.env.ALLOWED_ADDRESSES || "").toString().trim();
     }
   }
   const session = getCookie(event, "auth_session");
@@ -2284,7 +2275,7 @@ const trigger_get = defineEventHandler$1(async (event) => {
       petterUrl: petterUrl.slice(0, 50) + "...",
       hasSecret,
       petterOk,
-      petterAddress: config.petterAddress || "0x9a3E95f448f3daB367dd9213D4554444faa272F1",
+      petterAddress: config.petterAddress || "",
       baseRpcUrl: (config.baseRpcUrl || "https://mainnet.base.org").slice(0, 50) + "...",
       readyToTrigger: hasSecret && petterOk,
       issues: issues.length > 0 ? issues : null

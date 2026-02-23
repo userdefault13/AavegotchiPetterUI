@@ -4459,7 +4459,7 @@ const _inlineRuntimeConfig = {
     "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
     "allowedAddresses": "",
     "baseRpcUrl": "https://mainnet.base.org",
-    "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
+    "petterAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
     "petterBalanceAddress": "",
     "workerEnabled": true
   },
@@ -4467,7 +4467,7 @@ const _inlineRuntimeConfig = {
   "petterApiSecret": "67bee49be8fd7a6ee0b35a933ae5a12ff34861c700a3d09609622c939a0de245",
   "allowedAddress": "0x2127aa7265d573aa467f1d73554d17890b872e76",
   "allowedAddresses": "",
-  "petterAddress": "0xeFa494C63865e9Ab9DF001041558f26FaC897002",
+  "petterAddress": "0x9b23dB04457D9aF944858681331E40da8c91981F",
   "baseRpcUrl": "https://mainnet.base.org",
   "petterBalanceAddress": "",
   "workerEnabled": true

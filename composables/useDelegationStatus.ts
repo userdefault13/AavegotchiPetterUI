@@ -15,15 +15,9 @@ export interface DelegationStatus {
   canRegister: boolean
 }
 
-const CORRECT_PETTER_ADDRESS = '0x9a3E95f448f3daB367dd9213D4554444faa272F1' as const
-const DEPRECATED_PETTER_ADDRESSES = ['0xb4c123857ea7d2f1343d749818c19af439c65e15', '0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf', '0xeFa494C63865e9Ab9DF001041558f26FaC897002']
-
 export function useDelegationStatus() {
   const config = useRuntimeConfig()
-  let petterAddress = (config.public?.petterAddress as string) || CORRECT_PETTER_ADDRESS
-  if (DEPRECATED_PETTER_ADDRESSES.includes(petterAddress.toLowerCase())) {
-    petterAddress = CORRECT_PETTER_ADDRESS
-  }
+  const petterAddress = (config.public?.petterAddress as string) || ''
 
   const status: Ref<DelegationStatus | null> = ref(null)
   const loading = ref(true)

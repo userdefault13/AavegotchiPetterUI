@@ -290,7 +290,7 @@
             >
               <span class="text-slate-500 shrink-0">{{ formatLogTime(log.timestamp) }}</span>
               <span class="shrink-0 w-10" :class="{ 'text-amber-400': log.level === 'warn', 'text-red-400': log.level === 'error' }">
-                [{{ log.level.toUpperCase() }}]
+                [{{ (log.level || 'info').toUpperCase() }}]
               </span>
               <span class="break-all">{{ log.message }}</span>
             </div>

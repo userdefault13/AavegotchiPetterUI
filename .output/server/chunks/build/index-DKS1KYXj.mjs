@@ -138,7 +138,7 @@ _sfc_main$4.setup = (props, ctx) => {
   return _sfc_setup$4 ? _sfc_setup$4(props, ctx) : void 0;
 };
 const CORRECT_PETTER_ADDRESS = "0x9a3E95f448f3daB367dd9213D4554444faa272F1";
-const DEPRECATED_PETTER_ADDRESSES = ["0xb4c123857ea7d2f1343d749818c19af439c65e15", "0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf", "0xeFa494C63865e9Ab9DF001041558f26FaC897002"];
+const DEPRECATED_PETTER_ADDRESSES = ["0xb4c123857ea7d2f1343d749818c19af439c65e15", "0x6c5fc27f465ac73466d3a10508d2ed8a68364bbf", "0x9b23dB04457D9aF944858681331E40da8c91981F"];
 function useDelegationStatus() {
   var _a;
   const config = useRuntimeConfig();
